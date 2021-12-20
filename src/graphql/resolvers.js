@@ -4,16 +4,16 @@ const db = new PrismaClient()
 
 module.exports = {
   Query: {
-    wmfclass(_root, { id }) {
-      return db.tbl_wmfclasslist.findUnique({
+    singleclass(_root, { id }) {
+      return db.tbl_classlist.findUnique({
         where: { id },
       })
     },
-    wmfclasses() {
-      return db.tbl_wmfclasslist.findMany()
+    classes() {
+      return db.tbl_classlist.findMany()
     },
-    wmfclassNumber(_root, { classNumber }) {
-      return db.tbl_wmfclasslist.findUnique({ where: { classNumber } })
+    classNumber(_root, { classNumber }) {
+      return db.tbl_classlist.findUnique({ where: { classNumber } })
     },
     categories() {
       return db.tbl_category.findMany()
@@ -66,9 +66,9 @@ module.exports = {
   },
 
   Category: {
-    async classes(parent) {
-      return await db.tbl_wmfclasslist.findMany({
-        where: { id: parent.category },
+    async classes(root) {
+      return await db.tbl_classlist.findMany({
+        where: { id: root.category },
       })
     },
   },
@@ -79,25 +79,25 @@ module.exports = {
   Subdiscipline: {},
   Trophy: {},
 
-  Wmfclasslist: {
-    async discipline(parent) {
+  Classlist: {
+    async discipline(root) {
       return await db.tbl_discipline.findUnique({
-        where: { id: parent.discipline },
+        where: { id: root.discipline },
       })
     },
-    async subdiscipline(parent) {
+    async subdiscipline(root) {
       return await db.tbl_subdiscipline.findUnique({
-        where: { id: parent.subdiscipline },
+        where: { id: root.subdiscipline },
       })
     },
-    async category(parent) {
+    async category(root) {
       return await db.tbl_category.findUnique({
-        where: { id: parent.category },
+        where: { id: root.category },
       })
     },
-    async level(parent) {
-      return await db.tbl_levels.findUnique({
-        where: { id: parent.level },
+    async level(root) {
+      return await db.tbl_level.findUnique({
+        where: { id: root.level },
       })
     },
   },
