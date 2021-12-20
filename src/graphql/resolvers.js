@@ -4,62 +4,62 @@ const db = new PrismaClient()
 
 module.exports = {
   Query: {
-    singleclass(_root, { id }) {
-      return db.tbl_classlist.findUnique({
+    async singleclass(_root, { id }) {
+      return await db.tbl_classlist.findUnique({
         where: { id },
       })
     },
-    classes() {
-      return db.tbl_classlist.findMany()
+    async classes() {
+      return await db.tbl_classlist.findMany()
     },
-    classNumber(_root, { classNumber }) {
-      return db.tbl_classlist.findUnique({ where: { classNumber } })
+    async classNumber(_root, { classNumber }) {
+      return await db.tbl_classlist.findUnique({ where: { classNumber } })
     },
-    categories() {
-      return db.tbl_category.findMany()
+    async categories() {
+      return await db.tbl_category.findMany()
     },
-    category(_root, { id }) {
-      return db.tbl_category.findUnique({
+    async category(_root, { id }) {
+      return await db.tbl_category.findUnique({
         where: { id },
       })
     },
-    disciplines() {
-      return db.tbl_discipline.findMany()
+    async disciplines() {
+      return await db.tbl_discipline.findMany()
     },
-    discipline(_root, { id }) {
-      return db.tbl_discipline.findUnique({
+    async discipline(_root, { id }) {
+      return await db.tbl_discipline.findUnique({
         where: { id },
       })
     },
-    levels() {
-      return db.tbl_level.findMany()
+    async levels() {
+      return await db.tbl_level.findMany()
     },
-    level(_root, { id }) {
-      return db.tbl_level.findUnique({
+    async level(_root, { id }) {
+      return await db.tbl_level.findUnique({
         where: { id },
       })
     },
-    sacredTitles() {
-      return db.tbl_sacred.findMany()
+    async sacredTitles() {
+      return await db.tbl_sacred.findMany()
     },
-    sacredTitle(_root, { id }) {
-      return db.tbl_sacred.findUnique({
+    async sacredTitle(_root, { id }) {
+      return await db.tbl_sacred.findUnique({
         where: { id },
       })
     },
-    subdisciplines() {
-      return db.tbl_subdiscipline.findMany()
+    async subdisciplines() {
+      return await db.tbl_subdiscipline.findMany()
     },
-    subdiscipline(_root, { id }) {
-      return db.tbl_subdiscipline.findUnique({
+    async subdiscipline(_root, { id }) {
+      return await db.tbl_subdiscipline.findUnique({
         where: { id },
       })
     },
-    trophies() {
-      return db.tbl_trophy.findMany()
+    async trophies() {
+      return await db.tbl_trophy.findMany()
     },
-    trophy(root, { id }) {
-      return db.tbl_trophy.findUnique({
+    async trophy(root, { id }) {
+      return await db.tbl_trophy.findUnique({
         where: { id },
       })
     },
@@ -101,7 +101,7 @@ module.exports = {
       const trophyIDs = await classIDs.map((elem) => {
         return elem.trophyID
       })
-      return db.tbl_trophy.findMany({
+      return await db.tbl_trophy.findMany({
         where: {
           id: {
             in: trophyIDs,
@@ -143,7 +143,7 @@ module.exports = {
       const classIDs = await trophyIDs.map((elem) => {
         return elem.classID
       })
-      return db.tbl_classlist.findMany({
+      return await db.tbl_classlist.findMany({
         where: {
           id: {
             in: classIDs,
