@@ -9,7 +9,7 @@ datasource db {
 
 model tbl_category {
   id               Int             @id @default(autoincrement())
-  category         String          @db.VarChar(255)
+  name             String          @db.VarChar(255)
   description      String?         @db.Text
   requiredComposer String?         @db.VarChar(255)
   tbl_classlist    tbl_classlist[]
@@ -27,13 +27,13 @@ model tbl_class_trophy {
 
 model tbl_discipline {
   id            Int             @id @default(autoincrement())
-  discipline    String          @db.VarChar(50)
+  name          String          @db.VarChar(50)
   tbl_classlist tbl_classlist[]
 }
 
 model tbl_level {
   id            Int             @id @default(autoincrement())
-  level         String          @db.VarChar(50)
+  name          String          @db.VarChar(50)
   description   String?         @db.Text
   tbl_classlist tbl_classlist[]
 }
@@ -41,13 +41,13 @@ model tbl_level {
 model tbl_musclass {
   id                  Int                 @id @default(autoincrement())
   regID               Int
-  classNumber         String              @db.VarChar(9)
-  className           String              @db.VarChar(75)
-  instrument          String?             @db.VarChar(30)
-  instrumentLevel     String?             @db.VarChar(30)
+  number              String              @db.VarChar(9)
+  discipline          String              @db.VarChar(30)
+  subdiscipline       String              @db.VarChar(30)
+  level               String              @db.VarChar(30)
+  category            String              @db.VarChar(30)
   numSelections       Int                 @db.TinyInt
   tbl_musregistration tbl_musregistration @relation(fields: [regID], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "class_registration")
-  tbl_musselection    tbl_musselection[]
 
   @@index([regID], map: "regID")
 }
@@ -103,6 +103,7 @@ model tbl_musregistration {
   tbl_musgroup      tbl_musgroup[]
   tbl_musperformer  tbl_musperformer[]
   tbl_musschool     tbl_musschool[]
+  tbl_musselection  tbl_musselection[]
   tbl_musteacher    tbl_musteacher[]
 }
 
@@ -122,16 +123,16 @@ model tbl_musschool {
 }
 
 model tbl_musselection {
-  id           Int          @id @default(autoincrement())
-  classID      Int
-  title        String       @db.VarChar(100)
-  largerWork   String?      @db.VarChar(100)
-  movement     String?      @db.VarChar(30)
-  composer     String       @db.VarChar(30)
-  duration     DateTime     @db.Time(0)
-  tbl_musclass tbl_musclass @relation(fields: [classID], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "selection_class")
+  id                  Int                 @id @default(autoincrement())
+  regID               Int
+  title               String              @db.VarChar(100)
+  largerWork          String?             @db.VarChar(100)
+  movement            String?             @db.VarChar(30)
+  composer            String              @db.VarChar(30)
+  duration            DateTime            @db.Time(0)
+  tbl_musregistration tbl_musregistration @relation(fields: [regID], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "selection_reg")
 
-  @@index([classID], map: "selection_class")
+  @@index([regID], map: "regID")
 }
 
 model tbl_musteacher {
@@ -170,7 +171,7 @@ model tbl_sacred {
 
 model tbl_subdiscipline {
   id            Int             @id @default(autoincrement())
-  subdiscipline String          @db.VarChar(50)
+  name          String          @db.VarChar(50)
   description   String?         @db.Text
   maxPerformers Int?
   minPerformers Int?

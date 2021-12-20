@@ -68,36 +68,87 @@ module.exports = {
   Category: {
     async classes(root) {
       return await db.tbl_classlist.findMany({
-        where: { id: root.category },
+        where: { categoryID: root.id },
       })
     },
   },
-  ClassTrophy: {},
-  Discipline: {},
-  Sacred: {},
-  Level: {},
-  Subdiscipline: {},
-  Trophy: {},
 
   Classlist: {
     async discipline(root) {
       return await db.tbl_discipline.findUnique({
-        where: { id: root.discipline },
+        where: { id: root.disciplineID },
       })
     },
     async subdiscipline(root) {
       return await db.tbl_subdiscipline.findUnique({
-        where: { id: root.subdiscipline },
+        where: { id: root.subdisciplineID },
       })
     },
     async category(root) {
       return await db.tbl_category.findUnique({
-        where: { id: root.category },
+        where: { id: root.categoryID },
       })
     },
     async level(root) {
       return await db.tbl_level.findUnique({
-        where: { id: root.level },
+        where: { id: root.levelID },
+      })
+    },
+    async trophies(root) {
+      const classIDs = await db.tbl_class_trophy.findMany({
+        where: { classID: root.id },
+      })
+      const trophyIDs = await classIDs.map((elem) => {
+        return elem.trophyID
+      })
+      return db.tbl_trophy.findMany({
+        where: {
+          id: {
+            in: trophyIDs,
+          },
+        },
+      })
+    },
+  },
+
+  Discipline: {
+    async classes(root) {
+      return await db.tbl_classlist.findMany({
+        where: { disciplineID: root.id },
+      })
+    },
+  },
+
+  Sacred: {},
+  Level: {
+    async classes(root) {
+      return await db.tbl_classlist.findMany({
+        where: { levelID: root.id },
+      })
+    },
+  },
+  Subdiscipline: {
+    async classes(root) {
+      return await db.tbl_classlist.findMany({
+        where: { subdisciplineID: root.id },
+      })
+    },
+  },
+
+  Trophy: {
+    async classes(root) {
+      const trophyIDs = await db.tbl_class_trophy.findMany({
+        where: { trophyID: root.id },
+      })
+      const classIDs = await trophyIDs.map((elem) => {
+        return elem.classID
+      })
+      return db.tbl_classlist.findMany({
+        where: {
+          id: {
+            in: classIDs,
+          },
+        },
       })
     },
   },
