@@ -1,0 +1,35 @@
+{
+  "name": "wmf-regserver",
+  "version": "1.0.0",
+  "description": "Winnipeg Music Festival Registration Server",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "David Sawatzky at Diatonic Web Development",
+  "license": "ISC",
+  "devDependencies": {
+    "dotenv": "^10.0.0",
+    "eslint": "^8.4.1",
+    "eslint-config-prettier": "^8.3.0",
+    "nodemon": "^2.0.15",
+    "prettier": "^2.5.1",
+    "prisma": "^3.6.0"
+  },
+  "dependencies": {
+    "@prisma/client": "^3.6.0",
+    "apollo-server-core": "^3.5.0",
+    "apollo-server-express": "^3.5.0",
+    "bcrypt": "^5.0.1",
+    "convict": "^6.2.1",
+    "convict-format-with-validator": "^6.2.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.2",
+    "graphql": "^15.8.0",
+    "graphql-scalars": "^1.14.1",
+    "lodash": "^4.17.21",
+    "luxon": "^2.2.0",
+    "mysql2": "^2.3.3"
+  }
+}
