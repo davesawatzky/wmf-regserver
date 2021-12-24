@@ -4,13 +4,13 @@ const db = new PrismaClient()
 
 module.exports = {
   Query: {
-    async singleclass(_root, { id }) {
+    async classes() {
+      return await db.tbl_classlist.findMany()
+    },
+    async classById(_root, { id }) {
       return await db.tbl_classlist.findUnique({
         where: { id },
       })
-    },
-    async classes() {
-      return await db.tbl_classlist.findMany()
     },
     async classNumber(_root, { classNumber }) {
       return await db.tbl_classlist.findUnique({ where: { classNumber } })
@@ -23,12 +23,22 @@ module.exports = {
         where: { id },
       })
     },
+    async categoriesByName(_root, { name }) {
+      return await db.tbl_category.findMany({
+        where: { name: { contains: name } },
+      })
+    },
     async disciplines() {
       return await db.tbl_discipline.findMany()
     },
     async discipline(_root, { id }) {
       return await db.tbl_discipline.findUnique({
         where: { id },
+      })
+    },
+    async disciplinesByName(_root, { name }) {
+      return await db.tbl_discipline.findMany({
+        where: { name: { contains: name } },
       })
     },
     async levels() {
@@ -39,6 +49,11 @@ module.exports = {
         where: { id },
       })
     },
+    async levelsByName(_root, { name }) {
+      return await db.tbl_level.findMany({
+        where: { name: { contains: name } },
+      })
+    },
     async sacredTitles() {
       return await db.tbl_sacred.findMany()
     },
@@ -47,12 +62,22 @@ module.exports = {
         where: { id },
       })
     },
+    async soloGroupSchool(_root, { sgs }) {
+      return await db.tbl_classlist.findMany({
+        where: { SGS: sgs },
+      })
+    },
     async subdisciplines() {
       return await db.tbl_subdiscipline.findMany()
     },
     async subdiscipline(_root, { id }) {
       return await db.tbl_subdiscipline.findUnique({
         where: { id },
+      })
+    },
+    async subdisciplinesByName(_root, { name }) {
+      return await db.tbl_subdiscipline.findMany({
+        where: { name: { contains: name } },
       })
     },
     async trophies() {

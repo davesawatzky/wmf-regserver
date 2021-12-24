@@ -1,20 +1,31 @@
 scalar Date
 scalar Duration
 
+enum SGSlabel {
+  SOLO
+  GROUP
+  SCHOOL
+}
+
 type Query {
   classes: [Classlist!]!
-  singleclass(id: Int!): Classlist!
+  classById(id: Int!): Classlist!
   classNumber(classNumber: String!): Classlist
   categories: [Category!]!
   category(id: Int!): Category!
+  categoriesByName(name: String!): [Category!]!
   disciplines: [Discipline!]!
   discipline(id: Int!): Discipline!
+  disciplinesByName(name: String!): [Discipline!]!
   levels: [Level!]!
   level(id: Int!): Level!
+  levelsByName(name: String!): [Level!]
   sacredTitles: [Sacred!]!
   sacredTitle(id: Int!): Sacred!
+  soloGroupSchool(sgs: SGSlabel!): [Classlist!]!
   subdisciplines: [Subdiscipline!]!
   subdiscipline(id: Int!): Subdiscipline!
+  subdisciplinesByName(name: String!): [Subdiscipline!]!
   trophies: [Trophy!]!
   trophy(id: Int!): Trophy!
 }
@@ -37,6 +48,7 @@ type Classlist {
   maxSelection: Int!
   minSelection: Int!
   requiredSelection: String
+  soloGroupSchool: SGSlabel!
   trophies: [Trophy]
 }
 
