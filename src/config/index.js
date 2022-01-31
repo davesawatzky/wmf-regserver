@@ -6,7 +6,7 @@ convict.addFormats(convictFormat)
 // Define a schema
 const config = convict({
   env: {
-    doc: 'The application environment.',
+    doc: "The environment we're running on.",
     format: ['production', 'development', 'test'],
     default: 'development',
     env: 'NODE_ENV',
@@ -18,7 +18,7 @@ const config = convict({
     env: 'IP_ADDRESS',
   },
   port: {
-    doc: 'The port to bind.',
+    doc: 'The port the server runs on.',
     format: 'port',
     default: 8080,
     env: 'PORT',
@@ -53,7 +53,7 @@ const config = convict({
 // Load environment dependent configuration
 const env = config.get('env')
 config.loadFile(`./src/config/${env}.json`)
-
+console.log(DATABASE_URL)
 // Perform validation
 config.validate({ allowed: 'strict' })
 

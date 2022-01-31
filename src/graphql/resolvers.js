@@ -4,19 +4,16 @@ const db = new PrismaClient()
 
 module.exports = {
   Query: {
-    async classes() {
-      return await db.tbl_classlist.findMany()
-    },
-    async classById(_root, { id }) {
-      return await db.tbl_classlist.findUnique({
+    singleclass(_root, { id }) {
+      return db.tbl_wmfclasslist.findUnique({
         where: { id },
       })
     },
-    async classNumber(_root, { classNumber }) {
-      return await db.tbl_classlist.findUnique({ where: { classNumber } })
+    classes() {
+      return db.tbl_wmfclasslist.findMany()
     },
-    async categories() {
-      return await db.tbl_category.findMany()
+    classNumber(_root, { classNumber }) {
+      return db.tbl_wmfclasslist.findUnique({ where: { classNumber } })
     },
     async category(_root, { id }) {
       return await db.tbl_category.findUnique({
