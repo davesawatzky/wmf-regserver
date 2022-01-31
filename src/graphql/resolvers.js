@@ -4,15 +4,15 @@ const db = new PrismaClient()
 
 module.exports = {
   Query: {
-    wmfclass(_root, { id }) {
+    singleclass(_root, { id }) {
       return db.tbl_wmfclasslist.findUnique({
         where: { id },
       })
     },
-    wmfclasses() {
+    classes() {
       return db.tbl_wmfclasslist.findMany()
     },
-    wmfclassNumber(_root, { classNumber }) {
+    classNumber(_root, { classNumber }) {
       return db.tbl_wmfclasslist.findUnique({ where: { classNumber } })
     },
     categories() {
