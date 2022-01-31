@@ -1,75 +1,45 @@
 scalar Date
 scalar Duration
 
+enum SGSlabel {
+  SOLO
+  GROUP
+  SCHOOL
+}
+
 type Query {
   classes: [Classlist!]!
-  singleclass(id: ID!): Classlist!
+  classById(id: Int!): Classlist!
   classNumber(classNumber: String!): Classlist
   categories: [Category!]!
-  category(id: ID!): Category!
+  category(id: Int!): Category!
+  categoriesByName(name: String!): [Category!]!
   disciplines: [Discipline!]!
-  discipline(id: ID!): Discipline!
+  discipline(id: Int!): Discipline!
+  disciplinesByName(name: String!): [Discipline!]!
   levels: [Level!]!
-  level(id: ID!): Level!
+  level(id: Int!): Level!
+  levelsByName(name: String!): [Level!]
   sacredTitles: [Sacred!]!
-  sacredTitle(id: ID!): Sacred!
+  sacredTitle(id: Int!): Sacred!
+  soloGroupSchool(sgs: SGSlabel!): [Classlist!]!
   subdisciplines: [Subdiscipline!]!
-  subdiscipline(id: ID!): Subdiscipline!
+  subdiscipline(id: Int!): Subdiscipline!
+  subdisciplinesByName(name: String!): [Subdiscipline!]!
   trophies: [Trophy!]!
-  trophy(id: ID!): Trophy!
+  trophy(id: Int!): Trophy!
 }
 
 type Category {
-  id: ID!
-  category: String!
+  id: Int!
+  name: String!
   description: String
   requiredComposer: String
   classes: [Classlist!]!
 }
 
-type ClassTrophy {
-  classID: Int!
-  trophyID: Int!
-}
-
-type Discipline {
-  id: ID!
-  discipline: String!
-  classes: [Classlist!]!
-}
-
-type Level {
-  id: ID!
-  level: String!
-  description: String
-  classes: [Classlist!]!
-}
-
-type Sacred {
-  id: ID!
-  composer: String!
-  largeWork: String
-  title: String!
-}
-
-type Subdiscipline {
-  id: ID!
-  subdiscipline: String!
-  description: String!
-  maxPerformers: Int!
-  minPerformers: Int!
-  classes: [Classlist!]!
-}
-
-type Trophy {
-  id: ID!
-  name: String!
-  description: String!
-  classes: [Classlist!]!
-}
-
 type Classlist {
-  id: ID!
+  id: Int!
   classNumber: String!
   discipline: Discipline!
   subdiscipline: Subdiscipline!
@@ -78,4 +48,47 @@ type Classlist {
   maxSelection: Int!
   minSelection: Int!
   requiredSelection: String
+  soloGroupSchool: SGSlabel!
+  trophies: [Trophy]
+}
+
+type ClassTrophy {
+  classID: Int!
+  trophyID: Int!
+}
+
+type Discipline {
+  id: Int!
+  name: String!
+  classes: [Classlist!]!
+}
+
+type Level {
+  id: Int!
+  name: String!
+  description: String
+  classes: [Classlist!]!
+}
+
+type Sacred {
+  id: Int!
+  composer: String!
+  largeWork: String
+  title: String!
+}
+
+type Subdiscipline {
+  id: Int!
+  name: String!
+  description: String!
+  maxPerformers: Int!
+  minPerformers: Int!
+  classes: [Classlist!]!
+}
+
+type Trophy {
+  id: Int!
+  name: String!
+  description: String!
+  classes: [Classlist!]!
 }
