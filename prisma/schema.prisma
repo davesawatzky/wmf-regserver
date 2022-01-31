@@ -8,73 +8,71 @@ datasource db {
 }
 
 model tbl_category {
-  id               Int                @id
-  category         String?            @db.VarChar(255)
-  description      String?            @db.MediumText
-  requiredComposer String?            @db.VarChar(255)
-  tbl_wmfclasslist tbl_wmfclasslist[]
+  id               Int             @id @default(autoincrement())
+  name             String          @db.VarChar(255)
+  description      String?         @db.Text
+  requiredComposer String?         @db.VarChar(255)
+  tbl_classlist    tbl_classlist[]
 }
 
 model tbl_class_trophy {
-  classID          Int
-  trophyID         Int
-  tbl_wmfclasslist tbl_wmfclasslist @relation(fields: [classID], references: [id], onDelete: Cascade, map: "class_trophy_class")
-  tbl_trophy       tbl_trophy       @relation(fields: [trophyID], references: [id], onDelete: Cascade, map: "class_trophy_trophy")
+  classID       Int
+  trophyID      Int
+  tbl_classlist tbl_classlist @relation(fields: [classID], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "class_trophy_class")
+  tbl_trophy    tbl_trophy    @relation(fields: [trophyID], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "class_trophy_trophy")
 
   @@id([classID, trophyID])
   @@index([trophyID], map: "class_trophy_trophy")
 }
 
 model tbl_discipline {
-  id               Int                @id
-  discipline       String?            @db.VarChar(255)
-  tbl_wmfclasslist tbl_wmfclasslist[]
+  id            Int             @id @default(autoincrement())
+  name          String          @db.VarChar(50)
+  tbl_classlist tbl_classlist[]
 }
 
 model tbl_level {
-  id               Int                @id
-  level            String?            @db.VarChar(255)
-  description      String?            @db.MediumText
-  tbl_wmfclasslist tbl_wmfclasslist[]
+  id            Int             @id @default(autoincrement())
+  name          String          @db.VarChar(50)
+  description   String?         @db.Text
+  tbl_classlist tbl_classlist[]
 }
 
 model tbl_musclass {
-  id                  Int                 @id
+  id                  Int                 @id @default(autoincrement())
   regID               Int
-  classNumber         String              @db.VarChar(9)
-  className           String              @db.VarChar(75)
-  instrument          String              @db.VarChar(30)
+  number              String              @db.VarChar(9)
+  discipline          String              @db.VarChar(30)
+  subdiscipline       String              @db.VarChar(30)
   level               String              @db.VarChar(30)
+  category            String              @db.VarChar(30)
   numSelections       Int                 @db.TinyInt
-  tbl_musregistration tbl_musregistration @relation(fields: [regID], references: [id], onDelete: Cascade, map: "classes_registration")
-  tbl_musselection   tbl_musselection[]
+  tbl_musregistration tbl_musregistration @relation(fields: [regID], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "class_registration")
 
   @@index([regID], map: "regID")
 }
 
 model tbl_musgroup {
-  id                  Int                 @id
+  id                  Int                  @id @default(autoincrement())
   regID               Int
-  name                String              @db.VarChar(50)
-  type                String              @db.VarChar(15)
-  numPerformers       Int                 @db.TinyInt
-  age                 Int                 @db.TinyInt
-  instruments         String              @db.VarChar(200)
-  perfInOtherClasses  String              @db.VarChar(300)
-  numChaperones       Int                 @db.TinyInt
-  numWheelchairs      Int                 @db.TinyInt
-  earliestTime        DateTime            @db.Time(0)
-  latestTime          DateTime            @db.Time(0)
-  unavailable         Int
-  tbl_musregistration tbl_musregistration @relation(fields: [regID], references: [id], onDelete: Cascade, map: "group_registration")
-  tbl_musunavailable  tbl_musunavailable?
+  name                String               @db.VarChar(50)
+  type                String               @db.VarChar(15)
+  numPerformers       Int                  @db.TinyInt
+  age                 Int                  @db.TinyInt
+  instruments         String?              @db.VarChar(200)
+  perfInOtherClasses  String?              @db.VarChar(300)
+  numChaperones       Int?                 @db.TinyInt
+  numWheelchairs      Int?                 @db.TinyInt
+  earliestTime        DateTime?            @db.Time(0)
+  latestTime          DateTime?            @db.Time(0)
+  tbl_musregistration tbl_musregistration  @relation(fields: [regID], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "group_registration")
+  tbl_musunavailable  tbl_musunavailable[]
 
   @@index([regID], map: "regID")
-  @@index([unavailable], map: "unavailable")
 }
 
 model tbl_musperformer {
-  id                  Int                 @id
+  id                  Int                 @id @default(autoincrement())
   regID               Int
   lastName            String              @db.VarChar(30)
   firstName           String              @db.VarChar(30)
@@ -85,31 +83,32 @@ model tbl_musperformer {
   phone               String              @db.VarChar(14)
   email               String              @db.VarChar(50)
   age                 Int                 @db.TinyInt
-  otherClasses        String              @db.VarChar(100)
-  instrument          String              @db.VarChar(20)
-  level               String              @db.VarChar(20)
-  tbl_musregistration tbl_musregistration @relation(fields: [regID], references: [id], onDelete: Cascade, map: "performer_registration")
+  otherClasses        String?             @db.VarChar(255)
+  instrument          String?             @db.VarChar(20)
+  level               String?             @db.VarChar(20)
+  tbl_musregistration tbl_musregistration @relation(fields: [regID], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "performer_registration")
 
   @@index([regID], map: "performer_registration")
 }
 
 model tbl_musregistration {
-  id                Int                @id
+  id                Int                @id @default(autoincrement())
   type              String             @default("solo") @db.VarChar(10)
-  dateTimeSubmitted DateTime           @db.DateTime(0)
-  totalAmt          Decimal            @db.Decimal(10, 0)
-  payedAmt          Decimal            @db.Decimal(10, 0)
-  transactionInfo   String             @db.VarChar(200)
-  confirmation      String             @db.VarChar(12)
+  dateTimeSubmitted DateTime?          @db.DateTime(0)
+  totalAmt          Decimal?           @db.Decimal(10, 0)
+  payedAmt          Decimal?           @db.Decimal(10, 0)
+  transactionInfo   String?            @db.VarChar(200)
+  confirmation      String?            @db.VarChar(12)
   tbl_musclasses    tbl_musclass[]
   tbl_musgroup      tbl_musgroup[]
   tbl_musperformer  tbl_musperformer[]
   tbl_musschool     tbl_musschool[]
+  tbl_musselection  tbl_musselection[]
   tbl_musteacher    tbl_musteacher[]
 }
 
 model tbl_musschool {
-  id                  Int                 @id
+  id                  Int                 @id @default(autoincrement())
   regID               Int
   name                String              @db.VarChar(50)
   division            String              @db.VarChar(50)
@@ -118,90 +117,99 @@ model tbl_musschool {
   province            String              @db.VarChar(30)
   postalCode          String              @db.VarChar(6)
   phone               String              @db.VarChar(14)
-  tbl_musregistration tbl_musregistration @relation(fields: [regID], references: [id], onDelete: Cascade, map: "school_registration")
+  tbl_musregistration tbl_musregistration @relation(fields: [regID], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "school_registration")
 
   @@index([regID], map: "school_registration")
 }
 
 model tbl_musselection {
-  id             Int            @id
-  classID        Int
-  title          String         @db.VarChar(100)
-  largerWork     String         @db.VarChar(100)
-  movement       String         @db.VarChar(30)
-  composer       String         @db.VarChar(30)
-  duration       DateTime       @db.Time(0)
-  tbl_musclass tbl_musclass @relation(fields: [classID], references: [id], onDelete: Cascade, map: "selection_class")
+  id                  Int                 @id @default(autoincrement())
+  regID               Int
+  title               String              @db.VarChar(100)
+  largerWork          String?             @db.VarChar(100)
+  movement            String?             @db.VarChar(30)
+  composer            String              @db.VarChar(30)
+  duration            DateTime            @db.Time(0)
+  tbl_musregistration tbl_musregistration @relation(fields: [regID], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "selection_reg")
 
-  @@index([classID], map: "selection_class")
-
+  @@index([regID], map: "regID")
 }
 
 model tbl_musteacher {
-  id                  Int                 @id
+  id                  Int                 @id @default(autoincrement())
   regID               Int
-  mrmrsms             String              @db.VarChar(5)
+  prefix              String              @db.VarChar(5)
   lastName            String              @db.VarChar(30)
   firstName           String              @db.VarChar(30)
-  address             String              @db.VarChar(100)
-  city                String              @db.VarChar(30)
-  province            String              @db.VarChar(30)
-  postalCode          String              @db.VarChar(7)
-  phone               String              @db.VarChar(14)
+  address             String?             @db.VarChar(100)
+  city                String?             @db.VarChar(30)
+  province            String?             @db.VarChar(30)
+  postalCode          String?             @db.VarChar(7)
+  phone               String?             @db.VarChar(14)
   email               String              @db.VarChar(50)
-  tbl_musregistration tbl_musregistration @relation(fields: [regID], references: [id], onDelete: Cascade, map: "teacher_registration")
+  tbl_musregistration tbl_musregistration @relation(fields: [regID], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "teacher_registration")
 
   @@index([regID], map: "regID")
 }
 
 model tbl_musunavailable {
-  id           Int          @id
+  id           Int          @id @default(autoincrement())
+  groupID      Int
   date         DateTime     @db.Date
   time         DateTime     @db.Time(0)
-  tbl_musgroup tbl_musgroup @relation(fields: [id], references: [unavailable], onDelete: Cascade, map: "unavailable_group")
+  tbl_musgroup tbl_musgroup @relation(fields: [groupID], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "unavail_group")
+
+  @@index([groupID], map: "groupID")
 }
 
 model tbl_sacred {
-  id        Int     @id
-  composer  String? @db.VarChar(255)
-  largeWork String? @db.VarChar(255)
-  title     String? @db.VarChar(255)
+  id        Int    @id
+  composer  String @db.VarChar(255)
+  largeWork String @db.VarChar(255)
+  title     String @db.VarChar(255)
 }
 
 model tbl_subdiscipline {
-  id               Int                @id
-  subdiscipline    String?            @db.VarChar(255)
-  description      String?            @db.MediumText
-  maxPerformers    Int?
-  minPerformers    Int?
-  tbl_wmfclasslist tbl_wmfclasslist[]
+  id            Int             @id @default(autoincrement())
+  name          String          @db.VarChar(50)
+  description   String?         @db.Text
+  maxPerformers Int?
+  minPerformers Int?
+  tbl_classlist tbl_classlist[]
 }
 
 model tbl_trophy {
-  id               Int                @id
-  name             String?            @db.VarChar(255)
-  description      String?            @db.MediumText
+  id               Int                @id @default(autoincrement())
+  name             String             @db.VarChar(255)
+  description      String             @db.Text
   tbl_class_trophy tbl_class_trophy[]
 }
 
-model tbl_wmfclasslist {
-  id                Int                @id
-  classNumber       String?            @unique(map: "classNumber") @db.VarChar(12)
-  disciplineID      Int?
-  subdisciplineID   Int?
-  categoryID        Int?
-  levelID           Int?
-  minSelection      Int?
-  maxSelection      Int?
+model tbl_classlist {
+  id                Int                @id @default(autoincrement())
+  classNumber       String             @unique(map: "classNumber") @db.VarChar(12)
+  disciplineID      Int
+  subdisciplineID   Int
+  categoryID        Int
+  levelID           Int
+  minSelection      Int
+  maxSelection      Int
   requiredSelection String?            @db.VarChar(255)
-  tbl_category      tbl_category?      @relation(fields: [categoryID], references: [id], map: "tbl_wmfclasslist_ibfk_4")
-  tbl_discipline    tbl_discipline?    @relation(fields: [disciplineID], references: [id], map: "tbl_wmfclasslist_ibfk_1")
-  tbl_level        tbl_level?        @relation(fields: [levelID], references: [id], map: "tbl_wmfclasslist_ibfk_3")
-  tbl_subdiscipline tbl_subdiscipline? @relation(fields: [subdisciplineID], references: [id], map: "tbl_wmfclasslist_ibfk_2")
+  SGS               tbl_classlist_SGS  @default(SOLO)
+  tbl_category      tbl_category       @relation(fields: [categoryID], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "classlist_category")
+  tbl_discipline    tbl_discipline     @relation(fields: [disciplineID], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "classlist_discipline")
+  tbl_level         tbl_level          @relation(fields: [levelID], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "classlist_level")
+  tbl_subdiscipline tbl_subdiscipline  @relation(fields: [subdisciplineID], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "classlist_subdiscipline")
   tbl_class_trophy  tbl_class_trophy[]
 
   @@index([categoryID], map: "categoryID")
   @@index([disciplineID], map: "disciplineID")
   @@index([levelID], map: "levelID")
   @@index([subdisciplineID], map: "subdisciplineID")
+}
+
+enum tbl_classlist_SGS {
+  SOLO
+  GROUP
+  SCHOOL
 }
