@@ -1,4 +1,5 @@
 const fs = require('fs')
+require('dotenv').config()
 const config = require('./src/config')
 const { ApolloServer, gql } = require('apollo-server-express')
 const { ApolloServerPluginDrainHttpServer } = require('apollo-server-core')

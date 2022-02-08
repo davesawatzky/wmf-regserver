@@ -53,7 +53,6 @@ const config = convict({
 // Load environment dependent configuration
 const env = config.get('env')
 config.loadFile(`./src/config/${env}.json`)
-console.log(DATABASE_URL)
 // Perform validation
 config.validate({ allowed: 'strict' })
 
