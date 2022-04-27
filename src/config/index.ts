@@ -1,5 +1,5 @@
-const convict = require('convict')
-const convictFormat = require('convict-format-with-validator')
+import convict from 'convict'
+import convictFormat from 'convict-format-with-validator'
 
 convict.addFormats(convictFormat)
 
@@ -20,7 +20,7 @@ const config = convict({
   port: {
     doc: 'The port the server runs on.',
     format: 'port',
-    default: 8080,
+    default: 4000,
     env: 'PORT',
     arg: 'port',
   },
@@ -56,4 +56,4 @@ config.loadFile(`./src/config/${env}.json`)
 // Perform validation
 config.validate({ allowed: 'strict' })
 
-module.exports = { ...config.getProperties() }
+export default { ...config.getProperties() }

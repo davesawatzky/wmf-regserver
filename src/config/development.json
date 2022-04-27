@@ -2,7 +2,7 @@
   "db": {
     "useTLS": false
   },
-  "port": 8080,
+  "port": 4000,
   "cors": {
     "origin": "http://localhost:3000",
     "optionsSuccessStatus": 200

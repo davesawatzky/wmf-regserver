@@ -9,7 +9,7 @@ enum SGSlabel {
 
 type Query {
   classes: [Classlist!]!
-  classById(id: Int!): Classlist!
+  classById(id: ID!): Classlist!
   classNumber(classNumber: String!): Classlist
   categories: [Category!]!
   category(id: Int!): Category!
@@ -20,6 +20,7 @@ type Query {
   levels: [Level!]!
   level(id: Int!): Level!
   levelsByName(name: String!): [Level!]
+  registrations: [Registration!]!
   sacredTitles: [Sacred!]!
   sacredTitle(id: Int!): Sacred!
   soloGroupSchool(sgs: SGSlabel!): [Classlist!]!
@@ -28,10 +29,24 @@ type Query {
   subdisciplinesByName(name: String!): [Subdiscipline!]!
   trophies: [Trophy!]!
   trophy(id: Int!): Trophy!
+  users: [User!]!
+}
+
+type Mutation {
+  signup(credentials: CredentialsInput!): AuthPayload!
+  signin(credentials: CredentialsInput!): AuthPayload!
+  registrationCreate(performerType: SGSlabel!): RegistrationPayload!
+  registrationUpdate(
+    registrationID: ID!
+    registration: RegistrationInput!
+  ): RegistrationPayload!
+  registrationDelete(id: ID): RegistrationPayload!
+  performerCreate(performer: PerformerInput): PerformerPayload!
+  performerUpdate(performer: PerformerInput): PerformerPayload!
 }
 
 type Category {
-  id: Int!
+  id: ID!
   name: String!
   description: String
   requiredComposer: String
@@ -39,7 +54,7 @@ type Category {
 }
 
 type Classlist {
-  id: Int!
+  id: ID!
   classNumber: String!
   discipline: Discipline!
   subdiscipline: Subdiscipline!
@@ -53,32 +68,174 @@ type Classlist {
 }
 
 type ClassTrophy {
-  classID: Int!
-  trophyID: Int!
+  classID: ID!
+  trophyID: ID!
 }
 
 type Discipline {
-  id: Int!
+  id: ID!
   name: String!
   classes: [Classlist!]!
 }
-
 type Level {
-  id: Int!
+  id: ID!
   name: String!
   description: String
   classes: [Classlist!]!
 }
+type PerformingGroup {
+  id: ID!
+  name: String
+  groupType: String
+  numberOfPerformers: Int
+  age: Int
+  instruments: String
+  performerInOtherClasses: String
+  numberOfChaperones: Int
+  numberOfWheelchairs: Int
+  earliestPerformingTime: String
+  latestPerformingTime: String
+  unavailable: [Unavailable]
+}
+
+input PerformingGroupInput {
+  name: String
+  groupType: String
+  numberOfPerformers: Int
+  age: Int
+  instruments: String
+  performerInOtherClasses: String
+  numberOfChaperones: Int
+  numberOfWheelchairs: Int
+  earliestPerformingTime: String
+  latestPerformingTime: String
+}
+
+type Performer {
+  id: ID!
+  firstName: String
+  lastName: String
+  address: String
+  city: String
+  province: String
+  postalCode: String
+  phone: String
+  email: String
+  age: Int
+  otherClasses: String
+  instrument: String
+  level: Int
+}
+
+input PerformerInput {
+  firstName: String
+  lastName: String
+  address: String
+  city: String
+  province: String
+  postalCode: String
+  phone: String
+  email: String
+  age: Int
+  otherClasses: String
+  instrument: String
+  level: Int
+}
+
+type Registration {
+  id: ID!
+  performers: Performer
+  registeredClasses: [RegisteredClasses]
+  performingGroup: [PerformingGroup]
+  teacher: Teacher
+  school: School
+  performerType: SGSlabel!
+  timeSubmitted: String
+  totalAmt: Float
+  payedAmt: Float
+  transactionInfo: String
+  confirmation: String
+  createdAt: String!
+  updatedAt: String!
+}
+
+input RegistrationInput {
+  performerType: SGSlabel
+  dateSubmitted: String
+  submittedAt: String
+  totalAmt: Float
+  payedAmt: Float
+  transactionInfo: String
+  confirmation: String
+}
+
+type RegisteredClasses {
+  id: ID!
+  selections: [Selections]
+  classNumber: String!
+  discipline: String!
+  subdiscipline: String!
+  level: String!
+  category: String!
+  numberOfSelections: Int
+}
+
+input RegisteredClassesInput {
+  classNumber: String!
+  discipline: String!
+  subdiscipline: String!
+  level: String!
+  category: String!
+  numberOfSelections: Int
+}
+
+type Selections {
+  id: ID!
+  title: String!
+  largerWork: String
+  movement: String
+  composer: String
+  duration: String
+}
+
+input SelectionsInput {
+  title: String!
+  largerWork: String
+  movement: String
+  composer: String
+  duration: String
+}
 
 type Sacred {
-  id: Int!
+  id: ID!
   composer: String!
   largeWork: String
   title: String!
 }
 
+type School {
+  id: ID!
+  name: String!
+  division: String!
+  address: String!
+  city: String!
+  province: String!
+  postalCode: String!
+  phone: String!
+}
+
+input SchoolInput {
+  name: String!
+  division: String!
+  address: String!
+  city: String!
+  province: String!
+  postalCode: String!
+  phone: String!
+}
+
 type Subdiscipline {
-  id: Int!
+  id: ID!
   name: String!
   description: String!
   maxPerformers: Int!
@@ -86,9 +243,88 @@ type Subdiscipline {
   classes: [Classlist!]!
 }
 
+type Teacher {
+  id: ID!
+  prefix: String
+  firstName: String!
+  lastName: String!
+  address: String!
+  city: String!
+  province: String!
+  postalCode: String!
+  phone: String!
+  email: String
+}
+
+input TeacherInput {
+  prefix: String
+  firstName: String!
+  lastName: String!
+  address: String!
+  city: String!
+  province: String!
+  postalCode: String!
+  phone: String!
+  email: String
+}
+
 type Trophy {
-  id: Int!
+  id: ID!
   name: String!
   description: String!
   classes: [Classlist!]!
+}
+
+type Unavailable {
+  id: ID!
+  date: String
+  time: String
+}
+
+type User {
+  id: ID!
+  email: String!
+  staff: Boolean!
+  admin: Boolean!
+  registrations: [Registration!]!
+}
+type AuthPayload {
+  userErrors: [UserError!]!
+  token: String
+}
+type UserError {
+  message: String!
+  field: [String!]!
+}
+input CredentialsInput {
+  email: String!
+  password: String!
+}
+type RegistrationPayload {
+  userErrors: [UserError!]!
+  registration: Registration
+}
+
+type PerformerPayload {
+  userErrors: [UserError!]!
+  performer: Performer
+}
+type PerformingGroupPayload {
+  userErrors: [UserError!]!
+  performingGroup: PerformingGroup
+}
+
+type RegisteredClassesPayload {
+  userErrors: [UserError!]!
+  registeredClasses: RegisteredClasses
+}
+
+type SchoolPayload {
+  userErrors: [UserError!]!
+  school: School
+}
+
+type TeacherPayload {
+  userErrors: [UserError!]!
+  teacher: Teacher
 }
