@@ -1,16 +1,16 @@
 import { Context } from '../index'
 
-interface CanUserMutateRegistrationParams {
+interface CanUserMutateInfo {
   userID: number
-  registrationId: number
+  registrationID: number
   db: Context['db']
 }
 
-export const canUserMutateRegistration = async ({
+export const canUserMutateInfo = async ({
   userID,
-  registrationId,
+  registrationID,
   db,
-}: CanUserMutateRegistrationParams) => {
+}: CanUserMutateInfo) => {
   const user = await db.tbl_user.findUnique({
     where: {
       id: userID,
@@ -20,18 +20,20 @@ export const canUserMutateRegistration = async ({
   if (!user) {
     return {
       userErrors: [{ message: 'User not found' }],
+      registration: null,
     }
   }
 
   const registration = await db.tbl_registration.findUnique({
     where: {
-      id: registrationId,
+      id: registrationID,
     },
   })
 
   if (registration?.userID !== user.id) {
     return {
       userErrors: [{ message: 'Not authorized' }],
+      registration: null,
     }
   }
 }

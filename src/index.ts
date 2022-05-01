@@ -7,7 +7,7 @@ import { PrismaClient, Prisma } from '@prisma/client'
 import express from 'express'
 import http from 'http'
 // import cors from 'cors'
-import { Query, Mutation } from './graphql/index'
+import { Query, Mutation, OtherQueries } from './graphql/index'
 import { getUserFromToken } from './utils/getUserFromToken'
 
 const db = new PrismaClient()
@@ -27,8 +27,13 @@ export interface Context {
 const typeDefs = gql(
   fs.readFileSync('./src/graphql/schema.graphql', { encoding: 'utf8' })
 )
+const resolvers = {
+  Query,
+  Mutation,
+  ...OtherQueries,
+}
 
-async function startApolloServer(typeDefs: any, queries: any, mutations: any) {
+async function startApolloServer(typeDefs: any, resolvers: any) {
   const app = express()
   app
     .use(express.json())
@@ -40,10 +45,7 @@ async function startApolloServer(typeDefs: any, queries: any, mutations: any) {
 
   const apolloServer = new ApolloServer({
     typeDefs,
-    resolvers: {
-      ...queries,
-      ...mutations,
-    },
+    resolvers,
     context: async ({ req }: any): Promise<Context> => {
       const userInfo = await getUserFromToken(req.headers.authorization)
       return {
@@ -63,4 +65,4 @@ async function startApolloServer(typeDefs: any, queries: any, mutations: any) {
   return { apolloServer, app }
 }
 
-startApolloServer(typeDefs, Query, Mutation)
+startApolloServer(typeDefs, resolvers)

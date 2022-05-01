@@ -72,28 +72,28 @@ model tbl_reg_classpicks {
   numSelections     Int                 @db.TinyInt
 	createdAt			    DateTime 						@default(now())
 	updatedAt					DateTime						@updatedAt
-  tbl_registration  tbl_registration    @relation(fields: [regID], references: [id], onUpdate: Restrict, map: "class_registration")
+  tbl_registration  tbl_registration    @relation(fields: [regID], references: [id], onUpdate: Restrict, onDelete: Cascade, map: "class_registration")
   tbl_reg_selection tbl_reg_selection[]
 
   @@index([regID], map: "regID")
 }
 
 model tbl_reg_group {
-  id                  Int                   @id @default(autoincrement())
-  regID               Int
-  name                String                @db.VarChar(50)
-  type                String                @db.VarChar(15)
-  numPerformers       Int                   @db.TinyInt
-  age                 Int                   @db.TinyInt
-  instruments         String?               @db.VarChar(200)
-  perfInOtherClasses  String?               @db.VarChar(300)
-  numChaperones       Int?                  @db.TinyInt
-  numWheelchairs      Int?                  @db.TinyInt
-  earliestTime        DateTime?             @db.Time(0)
-  latestTime          DateTime?             @db.Time(0)
-	createdAt				    DateTime 		  				@default(now())
-	updatedAt					  DateTime							@updatedAt
-  tbl_registration    tbl_registration      @relation(fields: [regID], references: [id], onUpdate: Restrict, map: "group_registration")
+  id                            Int                   @id @default(autoincrement())
+  regID                         Int
+  name                          String                @db.VarChar(50)
+  groupType                     String                @db.VarChar(15)
+  numberOfPerformers            Int?                  @db.TinyInt
+  age                           Int?                  @db.TinyInt
+  instruments                   String?               @db.VarChar(200)
+  performerInOtherClasses       String?               @db.VarChar(300)
+  numberOfChaperones            Int?                  @db.TinyInt
+  numberOfWheelchairs           Int?                  @db.TinyInt
+  earliestPerformingTime        DateTime?             @db.Time(0)
+  latestPerformingTime          DateTime?             @db.Time(0)
+	createdAt				              DateTime 		  				@default(now())
+	updatedAt					            DateTime							@updatedAt
+  tbl_registration    tbl_registration      @relation(fields: [regID], references: [id], onUpdate: Restrict, onDelete: Cascade, map: "group_registration")
   tbl_reg_unavailable tbl_reg_unavailable[]
 
   @@index([regID], map: "regID")
@@ -104,19 +104,19 @@ model tbl_reg_performer {
   regID            Int
   lastName         String           @db.VarChar(30)
   firstName        String           @db.VarChar(30)
-  address          String           @db.VarChar(100)
-  city             String           @db.VarChar(30)
-  province         String           @db.VarChar(30)
-  postalCode       String           @db.VarChar(7)
-  phone            String           @db.VarChar(14)
-  email            String           @db.VarChar(50)
-  age              Int              @db.TinyInt
+  address          String?          @db.VarChar(100)
+  city             String?          @db.VarChar(30)
+  province         String?          @db.VarChar(30)
+  postalCode       String?          @db.VarChar(7)
+  phone            String?          @db.VarChar(14)
+  email            String?          @db.VarChar(50)
+  age              Int?             @db.TinyInt
   instrument       String?          @db.VarChar(20)
   level            String?          @db.VarChar(20)
   otherClasses     String?          @db.VarChar(255)
 	createdAt				 DateTime 				@default(now())
 	updatedAt				 DateTime					@updatedAt
-  tbl_registration tbl_registration @relation(fields: [regID], references: [id], onUpdate: Restrict, map: "performer_registration")
+  tbl_registration tbl_registration @relation(fields: [regID], references: [id], onUpdate: Restrict, onDelete: Cascade, map: "performer_registration")
 
   @@index([regID], map: "performer_registration")
 }
@@ -125,15 +125,15 @@ model tbl_reg_school {
   id               Int              @id @default(autoincrement())
   regID            Int
   name             String           @db.VarChar(50)
-  division         String           @db.VarChar(50)
-  address          String           @db.VarChar(100)
-  city             String           @db.VarChar(30)
-  province         String           @db.VarChar(30)
-  postalCode       String           @db.VarChar(6)
-  phone            String           @db.VarChar(14)
+  division         String?          @db.VarChar(50)
+  address          String?          @db.VarChar(100)
+  city             String?          @db.VarChar(30)
+  province         String?          @db.VarChar(30)
+  postalCode       String?          @db.VarChar(6)
+  phone            String?          @db.VarChar(14)
 	createdAt				 DateTime 				@default(now())
 	updatedAt				 DateTime					@updatedAt
-  tbl_registration tbl_registration @relation(fields: [regID], references: [id], onUpdate: Restrict, map: "school_registration")
+  tbl_registration tbl_registration @relation(fields: [regID], references: [id], onUpdate: Restrict, onDelete: Cascade, map: "school_registration")
 
   @@index([regID], map: "school_registration")
 }
@@ -148,7 +148,7 @@ model tbl_reg_selection {
   duration           DateTime           @db.Time(0)
 	createdAt					 DateTime 					@default(now())
 	updatedAt					 DateTime						@updatedAt
-  tbl_reg_classpicks tbl_reg_classpicks @relation(fields: [classpickID], references: [id], onUpdate: Restrict, map: "selection_class")
+  tbl_reg_classpicks tbl_reg_classpicks @relation(fields: [classpickID], references: [id], onUpdate: Restrict, onDelete: Cascade, map: "selection_class")
 
   @@index([classpickID], map: "regID")
 }
@@ -156,7 +156,7 @@ model tbl_reg_selection {
 model tbl_reg_teacher {
   id               Int              @id @default(autoincrement())
   regID            Int
-  prefix           String           @db.VarChar(5)
+  prefix           String?          @db.VarChar(5)
   lastName         String           @db.VarChar(30)
   firstName        String           @db.VarChar(30)
   address          String?          @db.VarChar(100)
@@ -164,10 +164,10 @@ model tbl_reg_teacher {
   province         String?          @db.VarChar(30)
   postalCode       String?          @db.VarChar(7)
   phone            String?          @db.VarChar(14)
-  email            String           @db.VarChar(50)
+  email            String?          @db.VarChar(50)
 	createdAt				 DateTime 				@default(now())
 	updatedAt				 DateTime					@updatedAt
-  tbl_registration tbl_registration @relation(fields: [regID], references: [id], onUpdate: Restrict, map: "teacher_registration")
+  tbl_registration tbl_registration @relation(fields: [regID], references: [id], onUpdate: Restrict, onDelete: Cascade, map: "teacher_registration")
 
   @@index([regID], map: "regID")
 }
@@ -179,7 +179,7 @@ model tbl_reg_unavailable {
   time          DateTime      @db.Time(0)
 	createdAt		  DateTime 			@default(now())
 	updatedAt		  DateTime			@updatedAt
-  tbl_reg_group tbl_reg_group @relation(fields: [groupID], references: [id], onUpdate: Restrict, map: "unavail_group")
+  tbl_reg_group tbl_reg_group @relation(fields: [groupID], references: [id], onUpdate: Restrict, onDelete: Cascade, map: "unavail_group")
 
   @@index([groupID], map: "groupID")
 }
@@ -187,7 +187,8 @@ model tbl_reg_unavailable {
 model tbl_registration {
   id                 Int                  @id @default(autoincrement())
   userID             Int                  @default(0)
-  performerType      tbl_SGS   					  @default(SOLO)
+  label							 String								@db.VarChar(100)	@default("Registration Form")
+	performerType      tbl_SGS   					  @default(SOLO)
   submittedAt				 DateTime?            @db.DateTime(0)
   totalAmt           Decimal?             @db.Decimal(10, 0)
   payedAmt           Decimal?             @db.Decimal(10, 0)
@@ -195,7 +196,7 @@ model tbl_registration {
   confirmation       String?              @db.VarChar(12)
 	createdAt					 DateTime 						@default(now())
 	updatedAt					 DateTime							@updatedAt
-  tbl_user           tbl_user             @relation(fields: [userID], references: [id], onUpdate: Restrict, map: "FK_tbl_registration_tbl_user")
+  tbl_user           tbl_user             @relation(fields: [userID], references: [id], onUpdate: Restrict, onDelete: SetNull, map: "FK_tbl_registration_tbl_user")
   tbl_reg_classpicks tbl_reg_classpicks[]
   tbl_reg_group      tbl_reg_group[]
   tbl_reg_performer  tbl_reg_performer[]
@@ -232,8 +233,8 @@ model tbl_user {
   id               Int                @id @default(autoincrement())
   email            String             @unique(map: "uniqueEmail") @db.VarChar(255)
   password         String             @db.VarChar(255)
-  staff            Boolean            @default(false)
-  admin            Boolean            @default(false)
+  staff            Boolean?           @default(false)
+  admin            Boolean?           @default(false)
 	createdAt				 DateTime 					@default(now())
 	updatedAt				 DateTime						@updatedAt
   tbl_registration tbl_registration[]

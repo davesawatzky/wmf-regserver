@@ -20,7 +20,12 @@ type Query {
   levels: [Level!]!
   level(id: Int!): Level!
   levelsByName(name: String!): [Level!]
+  performers: [Performer!]!
+  performer(id: ID): Performer!
+  groups: [Group!]!
+  group(id: ID!): Group!
   registrations: [Registration!]!
+  registration(id: ID!): Registration!
   sacredTitles: [Sacred!]!
   sacredTitle(id: Int!): Sacred!
   soloGroupSchool(sgs: SGSlabel!): [Classlist!]!
@@ -35,14 +40,51 @@ type Query {
 type Mutation {
   signup(credentials: CredentialsInput!): AuthPayload!
   signin(credentials: CredentialsInput!): AuthPayload!
-  registrationCreate(performerType: SGSlabel!): RegistrationPayload!
+  registrationCreate(
+    performerType: SGSlabel!
+    label: String!
+  ): RegistrationPayload!
   registrationUpdate(
     registrationID: ID!
     registration: RegistrationInput!
   ): RegistrationPayload!
-  registrationDelete(id: ID): RegistrationPayload!
-  performerCreate(performer: PerformerInput): PerformerPayload!
-  performerUpdate(performer: PerformerInput): PerformerPayload!
+  registrationDelete(id: ID!): RegistrationPayload!
+  performerCreate(
+    registrationID: ID!
+    performer: PerformerInput!
+  ): PerformerPayload!
+  performerUpdate(
+    performerID: ID!
+    performer: PerformerInput!
+  ): PerformerPayload!
+  performerDelete(performerID: ID!): PerformerPayload!
+  schoolCreate(registrationID: ID!, school: SchoolInput!): SchoolPayload!
+  schoolUpdate(schoolID: ID!, school: SchoolInput!): SchoolPayload!
+  schoolDelete(schoolID: ID!): SchoolPayload!
+  teacherCreate(registrationID: ID!, teacher: TeacherInput!): TeacherPayload!
+  teacherUpdate(teacherID: ID!, teacher: TeacherInput!): TeacherPayload!
+  teacherDelete(teacherID: ID!): TeacherPayload!
+  groupCreate(registrationID: ID!, group: GroupInput!): GroupPayload!
+  groupUpdate(groupID: ID!, group: GroupInput!): GroupPayload!
+  groupDelete(groupID: ID!): GroupPayload!
+  selectionCreate(
+    registrationID: ID!
+    selection: SelectionInput!
+  ): SelectionPayload!
+  selectionUpdate(
+    selectionID: ID!
+    selection: SelectionInput!
+  ): SelectionPayload!
+  selectionDelete(selectionID: ID!): SelectionPayload!
+  registeredClassCreate(
+    registrationID: ID!
+    registeredClass: RegisteredClassInput!
+  ): RegisteredClassPayload!
+  registeredClassUpdate(
+    registeredClassID: ID!
+    registeredClass: RegisteredClassInput!
+  ): RegisteredClassPayload!
+  registeredClassDelete(registeredClassID: ID!): RegisteredClassPayload!
 }
 
 type Category {
@@ -77,13 +119,8 @@ type Discipline {
   name: String!
   classes: [Classlist!]!
 }
-type Level {
-  id: ID!
-  name: String!
-  description: String
-  classes: [Classlist!]!
-}
-type PerformingGroup {
+
+type Group {
   id: ID!
   name: String
   groupType: String
@@ -98,7 +135,7 @@ type PerformingGroup {
   unavailable: [Unavailable]
 }
 
-input PerformingGroupInput {
+input GroupInput {
   name: String
   groupType: String
   numberOfPerformers: Int
@@ -110,7 +147,12 @@ input PerformingGroupInput {
   earliestPerformingTime: String
   latestPerformingTime: String
 }
-
+type Level {
+  id: ID!
+  name: String!
+  description: String
+  classes: [Classlist!]!
+}
 type Performer {
   id: ID!
   firstName: String
@@ -144,9 +186,10 @@ input PerformerInput {
 
 type Registration {
   id: ID!
-  performers: Performer
-  registeredClasses: [RegisteredClasses]
-  performingGroup: [PerformingGroup]
+  label: String!
+  performers: [Performer]
+  registeredClasses: [RegisteredClass]
+  groups: [Group]
   teacher: Teacher
   school: School
   performerType: SGSlabel!
@@ -160,6 +203,7 @@ type Registration {
 }
 
 input RegistrationInput {
+  label: String
   performerType: SGSlabel
   dateSubmitted: String
   submittedAt: String
@@ -169,9 +213,9 @@ input RegistrationInput {
   confirmation: String
 }
 
-type RegisteredClasses {
+type RegisteredClass {
   id: ID!
-  selections: [Selections]
+  selections: [Selection]
   classNumber: String!
   discipline: String!
   subdiscipline: String!
@@ -180,7 +224,7 @@ type RegisteredClasses {
   numberOfSelections: Int
 }
 
-input RegisteredClassesInput {
+input RegisteredClassInput {
   classNumber: String!
   discipline: String!
   subdiscipline: String!
@@ -189,7 +233,7 @@ input RegisteredClassesInput {
   numberOfSelections: Int
 }
 
-type Selections {
+type Selection {
   id: ID!
   title: String!
   largerWork: String
@@ -198,7 +242,7 @@ type Selections {
   duration: String
 }
 
-input SelectionsInput {
+input SelectionInput {
   title: String!
   largerWork: String
   movement: String
@@ -216,22 +260,22 @@ type Sacred {
 type School {
   id: ID!
   name: String!
-  division: String!
-  address: String!
-  city: String!
-  province: String!
-  postalCode: String!
-  phone: String!
+  division: String
+  address: String
+  city: String
+  province: String
+  postalCode: String
+  phone: String
 }
 
 input SchoolInput {
-  name: String!
-  division: String!
-  address: String!
-  city: String!
-  province: String!
-  postalCode: String!
-  phone: String!
+  name: String
+  division: String
+  address: String
+  city: String
+  province: String
+  postalCode: String
+  phone: String
 }
 
 type Subdiscipline {
@@ -248,11 +292,11 @@ type Teacher {
   prefix: String
   firstName: String!
   lastName: String!
-  address: String!
-  city: String!
-  province: String!
-  postalCode: String!
-  phone: String!
+  address: String
+  city: String
+  province: String
+  postalCode: String
+  phone: String
   email: String
 }
 
@@ -260,11 +304,11 @@ input TeacherInput {
   prefix: String
   firstName: String!
   lastName: String!
-  address: String!
-  city: String!
-  province: String!
-  postalCode: String!
-  phone: String!
+  address: String
+  city: String
+  province: String
+  postalCode: String
+  phone: String
   email: String
 }
 
@@ -284,8 +328,8 @@ type Unavailable {
 type User {
   id: ID!
   email: String!
-  staff: Boolean!
-  admin: Boolean!
+  staff: Boolean
+  admin: Boolean
   registrations: [Registration!]!
 }
 type AuthPayload {
@@ -309,14 +353,14 @@ type PerformerPayload {
   userErrors: [UserError!]!
   performer: Performer
 }
-type PerformingGroupPayload {
+type GroupPayload {
   userErrors: [UserError!]!
-  performingGroup: PerformingGroup
+  group: Group
 }
 
-type RegisteredClassesPayload {
+type RegisteredClassPayload {
   userErrors: [UserError!]!
-  registeredClasses: RegisteredClasses
+  registeredClass: RegisteredClass
 }
 
 type SchoolPayload {
@@ -327,4 +371,8 @@ type SchoolPayload {
 type TeacherPayload {
   userErrors: [UserError!]!
   teacher: Teacher
+}
+type SelectionPayload {
+  userErrors: [UserError!]!
+  selection: Selection
 }
