@@ -1,13 +1,14 @@
 import fs from 'fs'
 import 'dotenv/config'
 import config from './config'
+import { typeDefs as scalarTypeDefs } from 'graphql-scalars'
 import { ApolloServer, gql } from 'apollo-server-express'
 import { ApolloServerPluginDrainHttpServer } from 'apollo-server-core'
 import { PrismaClient, Prisma } from '@prisma/client'
 import express from 'express'
 import http from 'http'
 // import cors from 'cors'
-import { Query, Mutation, OtherQueries } from './graphql/index'
+import { Query, Mutation, OtherQueries } from './graphql'
 import { getUserFromToken } from './utils/getUserFromToken'
 
 const db = new PrismaClient()
@@ -24,16 +25,17 @@ export interface Context {
   } | null
 }
 
-const typeDefs = gql(
-  fs.readFileSync('./src/graphql/schema.graphql', { encoding: 'utf8' })
-)
+const typeDefs = [
+  ...scalarTypeDefs,
+  gql(fs.readFileSync('./src/graphql/schema.graphql', { encoding: 'utf8' })),
+]
 const resolvers = {
   Query,
   Mutation,
   ...OtherQueries,
 }
 
-async function startApolloServer(typeDefs: any, resolvers: any) {
+async function startApolloServer() {
   const app = express()
   app
     .use(express.json())
@@ -65,4 +67,4 @@ async function startApolloServer(typeDefs: any, resolvers: any) {
   return { apolloServer, app }
 }
 
-startApolloServer(typeDefs, resolvers)
+startApolloServer()

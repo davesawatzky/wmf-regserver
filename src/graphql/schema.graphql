@@ -1,5 +1,7 @@
 scalar Date
+scalar DateTime
 scalar Duration
+scalar EmailAddress
 
 enum SGSlabel {
   SOLO
@@ -8,17 +10,18 @@ enum SGSlabel {
 }
 
 type Query {
-  classes: [Classlist!]!
+  classes(SGSlabel: SGSlabel): [Classlist!]!
+  classSearch(classSearchArgs: ClassSearchArgs!): [Classlist!]!
   classById(id: ID!): Classlist!
-  classNumber(classNumber: String!): Classlist
-  categories: [Category!]!
-  category(id: Int!): Category!
+  classByNumber(classNumber: String!): Classlist
+  categories(levelID: ID, subdisciplineID: ID): [Category!]!
+  category(id: ID!): Category!
   categoriesByName(name: String!): [Category!]!
   disciplines: [Discipline!]!
-  discipline(id: Int!): Discipline!
+  discipline(id: ID!): Discipline!
   disciplinesByName(name: String!): [Discipline!]!
-  levels: [Level!]!
-  level(id: Int!): Level!
+  levels(subdisciplineID: ID): [Level!]!
+  level(id: ID!): Level!
   levelsByName(name: String!): [Level!]
   performers: [Performer!]!
   performer(id: ID): Performer!
@@ -27,14 +30,14 @@ type Query {
   registrations: [Registration!]!
   registration(id: ID!): Registration!
   sacredTitles: [Sacred!]!
-  sacredTitle(id: Int!): Sacred!
-  soloGroupSchool(sgs: SGSlabel!): [Classlist!]!
-  subdisciplines: [Subdiscipline!]!
-  subdiscipline(id: Int!): Subdiscipline!
+  sacredTitle(id: ID!): Sacred!
+  subdisciplines(disciplineID: ID): [Subdiscipline!]!
+  subdiscipline(id: ID!): Subdiscipline!
   subdisciplinesByName(name: String!): [Subdiscipline!]!
   trophies: [Trophy!]!
-  trophy(id: Int!): Trophy!
+  trophy(id: ID!): Trophy!
   users: [User!]!
+  user(id: ID!): User!
 }
 
 type Mutation {
@@ -95,17 +98,22 @@ type Category {
   classes: [Classlist!]!
 }
 
+input ClassSearchArgs {
+  subdisciplineID: ID
+  levelID: ID
+  categoryID: ID
+}
+
 type Classlist {
   id: ID!
   classNumber: String!
-  discipline: Discipline!
   subdiscipline: Subdiscipline!
   level: Level!
   category: Category!
   maxSelection: Int!
   minSelection: Int!
   requiredSelection: String
-  soloGroupSchool: SGSlabel!
+  SGSlabel: SGSlabel!
   trophies: [Trophy]
 }
 
@@ -117,7 +125,7 @@ type ClassTrophy {
 type Discipline {
   id: ID!
   name: String!
-  classes: [Classlist!]!
+  subdisciplines: [Subdiscipline!]!
 }
 
 type Group {
@@ -151,6 +159,7 @@ type Level {
   id: ID!
   name: String!
   description: String
+  categories(categoryID: ID): [Category]
   classes: [Classlist!]!
 }
 type Performer {
@@ -162,7 +171,7 @@ type Performer {
   province: String
   postalCode: String
   phone: String
-  email: String
+  email: EmailAddress
   age: Int
   otherClasses: String
   instrument: String
@@ -177,7 +186,7 @@ input PerformerInput {
   province: String
   postalCode: String
   phone: String
-  email: String
+  email: EmailAddress
   age: Int
   otherClasses: String
   instrument: String
@@ -193,13 +202,12 @@ type Registration {
   teacher: Teacher
   school: School
   performerType: SGSlabel!
-  timeSubmitted: String
+  submittedAt: DateTime
   totalAmt: Float
   payedAmt: Float
   transactionInfo: String
   confirmation: String
-  createdAt: String!
-  updatedAt: String!
+  createdAt: DateTime
 }
 
 input RegistrationInput {
@@ -216,20 +224,20 @@ input RegistrationInput {
 type RegisteredClass {
   id: ID!
   selections: [Selection]
-  classNumber: String!
-  discipline: String!
-  subdiscipline: String!
-  level: String!
-  category: String!
+  classNumber: String
+  discipline: String
+  subdiscipline: String
+  level: String
+  category: String
   numberOfSelections: Int
 }
 
 input RegisteredClassInput {
-  classNumber: String!
-  discipline: String!
-  subdiscipline: String!
-  level: String!
-  category: String!
+  classNumber: String
+  discipline: String
+  subdiscipline: String
+  level: String
+  category: String
   numberOfSelections: Int
 }
 
@@ -281,9 +289,11 @@ input SchoolInput {
 type Subdiscipline {
   id: ID!
   name: String!
-  description: String!
+  discipline: Discipline!
+  description: String
   maxPerformers: Int!
   minPerformers: Int!
+  levels(levelID: ID): [Level]
   classes: [Classlist!]!
 }
 
@@ -297,7 +307,7 @@ type Teacher {
   province: String
   postalCode: String
   phone: String
-  email: String
+  email: EmailAddress
 }
 
 input TeacherInput {
@@ -309,7 +319,7 @@ input TeacherInput {
   province: String
   postalCode: String
   phone: String
-  email: String
+  email: EmailAddress
 }
 
 type Trophy {
@@ -327,7 +337,7 @@ type Unavailable {
 
 type User {
   id: ID!
-  email: String!
+  email: EmailAddress!
   staff: Boolean
   admin: Boolean
   registrations: [Registration!]!
@@ -341,7 +351,7 @@ type UserError {
   field: [String!]!
 }
 input CredentialsInput {
-  email: String!
+  email: EmailAddress!
   password: String!
 }
 type RegistrationPayload {

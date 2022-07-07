@@ -9,16 +9,47 @@ import {
 } from '@prisma/client'
 import { Context } from '../../../index'
 
+interface CategoriesSelect {
+  levelID: number
+  subdisciplineID: number
+}
+
+interface ClassSelect {
+  classSearchArgs: {
+    subdisciplineID: string
+    levelID: string
+    categoryID: string
+  }
+}
+
 export const festivalQueries = {
+  classSearch: (_: any, { classSearchArgs }: ClassSelect, { db }: Context) => {
+    const { subdisciplineID, levelID, categoryID } = classSearchArgs
+    return db.tbl_classlist.findMany({
+      where: {
+        subdisciplineID: parseInt(subdisciplineID),
+        levelID: parseInt(levelID),
+        categoryID: parseInt(categoryID),
+      },
+    })
+  },
+
   classById: (_: any, { id }: tbl_classlist, { db }: Context) => {
     return db.tbl_classlist.findUnique({
       where: { id },
     })
   },
-  classes: (_: any, __: any, { db }: Context) => {
+  classes: (_: any, { SGSlabel }: tbl_classlist, { db }: Context) => {
+    if (SGSlabel) {
+      return db.tbl_classlist.findMany({
+        where: {
+          SGSlabel,
+        },
+      })
+    }
     return db.tbl_classlist.findMany()
   },
-  classNumber: (_: any, { classNumber }: tbl_classlist, { db }: Context) => {
+  classByNumber: (_: any, { classNumber }: tbl_classlist, { db }: Context) => {
     return db.tbl_classlist.findUnique({ where: { classNumber } })
   },
   category: (_: any, { id }: tbl_category, { db }: Context) => {
@@ -26,7 +57,28 @@ export const festivalQueries = {
       where: { id },
     })
   },
-  categories: (_: any, __: any, { db }: Context) => {
+  categories: async (
+    _: any,
+    { levelID, subdisciplineID }: CategoriesSelect,
+    { db }: Context
+  ) => {
+    if (levelID && subdisciplineID) {
+      const classIDs = await db.tbl_classlist.findMany({
+        where: {
+          subdisciplineID: Number(subdisciplineID),
+          levelID: Number(levelID),
+        },
+      })
+      const categoryIDs = await classIDs.map((e) => e.categoryID)
+      return db.tbl_category.findMany({
+        where: {
+          id: {
+            in: categoryIDs,
+          },
+        },
+      })
+    }
+
     return db.tbl_category.findMany()
   },
   categoriesByName: (_: any, { name }: tbl_category, { db }: Context) => {
@@ -47,9 +99,23 @@ export const festivalQueries = {
       where: { name: { contains: name } },
     })
   },
-  levels: (_: any, __: any, { db }: Context) => {
+  levels: async (_: any, { subdisciplineID }, { db }: Context) => {
+    if (subdisciplineID) {
+      const classIDs = await db.tbl_classlist.findMany({
+        where: { subdisciplineID: parseInt(subdisciplineID) },
+      })
+      const levelIDs = await classIDs.map((e) => e.levelID)
+      return db.tbl_level.findMany({
+        where: {
+          id: {
+            in: levelIDs,
+          },
+        },
+      })
+    }
     return db.tbl_level.findMany()
   },
+
   level: (_: any, { id }: tbl_level, { db }: Context) => {
     return db.tbl_level.findUnique({
       where: { id },
@@ -68,12 +134,16 @@ export const festivalQueries = {
       where: { id },
     })
   },
-  soloGroupSchool: (_: any, { SGS }: tbl_classlist, { db }: Context) => {
-    return db.tbl_classlist.findMany({
-      where: { SGS },
-    })
-  },
-  subdisciplines: (_: any, __: any, { db }: Context) => {
+  subdisciplines: (
+    _: any,
+    { disciplineID }: tbl_subdiscipline,
+    { db }: Context
+  ) => {
+    if (disciplineID) {
+      return db.tbl_subdiscipline.findMany({
+        where: { disciplineID: Number(disciplineID) },
+      })
+    }
     return db.tbl_subdiscipline.findMany()
   },
   subdiscipline: (_: any, { id }: tbl_subdiscipline, { db }: Context) => {
@@ -112,11 +182,18 @@ export const Category = {
 }
 
 export const Classlist = {
-  discipline: ({ disciplineID }: tbl_classlist, _: any, { db }: Context) => {
-    return db.tbl_discipline.findUnique({
-      where: { id: disciplineID },
+  category: ({ categoryID }: tbl_classlist, _: any, { db }: Context) => {
+    return db.tbl_category.findUnique({
+      where: { id: categoryID },
     })
   },
+
+  level: ({ levelID }: tbl_classlist, _: any, { db }: Context) => {
+    return db.tbl_level.findUnique({
+      where: { id: levelID },
+    })
+  },
+
   subdiscipline: (
     { subdisciplineID }: tbl_classlist,
     _: any,
@@ -124,16 +201,6 @@ export const Classlist = {
   ) => {
     return db.tbl_subdiscipline.findUnique({
       where: { id: subdisciplineID },
-    })
-  },
-  category: ({ categoryID }: tbl_classlist, _: any, { db }: Context) => {
-    return db.tbl_category.findUnique({
-      where: { id: categoryID },
-    })
-  },
-  level: ({ levelID }: tbl_classlist, _: any, { db }: Context) => {
-    return db.tbl_level.findUnique({
-      where: { id: levelID },
     })
   },
   trophies: async ({ id }: tbl_classlist, _: any, { db }: Context) => {
@@ -154,14 +221,12 @@ export const Classlist = {
 }
 
 export const Discipline = {
-  classes: ({ id }: tbl_discipline, _: any, { db }: Context) => {
-    return db.tbl_classlist.findMany({
+  subdisciplines: ({ id }: tbl_discipline, _: any, { db }: Context) => {
+    return db.tbl_subdiscipline.findMany({
       where: { disciplineID: id },
     })
   },
 }
-
-export const Sacred = {}
 
 export const Level = {
   classes: ({ id }: tbl_level, _: any, { db }: Context) => {
@@ -169,12 +234,62 @@ export const Level = {
       where: { levelID: id },
     })
   },
+  categories: async ({ id }: tbl_level, { categoryID }, { db }: Context) => {
+    let classIDs: tbl_classlist[]
+    if (categoryID) {
+      classIDs = await db.tbl_classlist.findMany({
+        where: { categoryID, levelID: id },
+      })
+    } else {
+      classIDs = await db.tbl_classlist.findMany({
+        where: { levelID: id },
+      })
+    }
+    const categoryIDs = await classIDs.map((e) => e.categoryID)
+    return db.tbl_level.findMany({
+      where: {
+        id: {
+          in: categoryIDs,
+        },
+      },
+    })
+  },
 }
 
+export const Sacred = {}
 export const Subdiscipline = {
   classes: ({ id }: tbl_subdiscipline, _: any, { db }: Context) => {
     return db.tbl_classlist.findMany({
       where: { subdisciplineID: id },
+    })
+  },
+  discipline: (
+    { disciplineID }: tbl_subdiscipline,
+    _: any,
+    { db }: Context
+  ) => {
+    return db.tbl_discipline.findUnique({
+      where: { id: disciplineID },
+    })
+  },
+  levels: async ({ id }: tbl_subdiscipline, { levelID }, { db }: Context) => {
+    let classIDs: tbl_classlist[]
+    if (levelID) {
+      classIDs = await db.tbl_classlist.findMany({
+        where: { levelID, subdisciplineID: id },
+      })
+    } else {
+      classIDs = await db.tbl_classlist.findMany({
+        where: { subdisciplineID: id },
+      })
+    }
+    const levelIDs = await classIDs.map((e) => e.levelID)
+    return db.tbl_level.findMany({
+      where: {
+        id: {
+          in: levelIDs,
+        },
+      },
     })
   },
 }

@@ -13,6 +13,12 @@ interface RegisteredClassPayloadType {
 }
 
 export const RegisteredClassMutations = {
+  /**
+   *
+   * Add Classes to a registration Form
+   * @param registrationID The id of the registration form.
+   * @param registeredClass The class object to add to the registration form.
+   */
   registeredClassCreate: async (
     _: any,
     {
@@ -21,6 +27,9 @@ export const RegisteredClassMutations = {
     }: { registrationID: number; registeredClass: tbl_reg_classpicks },
     { db, userInfo }: Context
   ): Promise<RegisteredClassPayloadType> => {
+    /**
+     * Check if User is logged in.
+     */
     if (!userInfo) {
       return {
         userErrors: [
@@ -33,21 +42,20 @@ export const RegisteredClassMutations = {
     }
 
     if (!userInfo.admin && !userInfo.staff) {
-      let idCheck = await db.tbl_user.findMany({
+      let idCheck = await db.tbl_registration.findUnique({
+        where: {
+          id: Number(registrationID),
+        },
         select: {
           id: true,
-          tbl_registration: {
-            select: {
-              id: true,
-            },
-            where: {
-              id: registrationID,
-            },
+          performerType: true,
+          tbl_user: {
+            select: { id: true },
           },
         },
       })
 
-      if (!idCheck || idCheck.length > 1 || idCheck[0].id != userInfo.userID) {
+      if (idCheck?.tbl_user?.id != userInfo.userID) {
         return {
           userErrors: [
             {
@@ -56,6 +64,26 @@ export const RegisteredClassMutations = {
           ],
           registeredClass: null,
         }
+      }
+    }
+    /**
+     * Check to see if the class is already listed in registration.
+     */
+    let classExists = await db.tbl_reg_classpicks.findMany({
+      where: {
+        regID: registeredClass.regID,
+        classNumber: registeredClass.classNumber,
+      },
+    })
+
+    if (classExists.length > 0) {
+      return {
+        userErrors: [
+          {
+            message: `Registration form already includes class ${registeredClass.classNumber}.  Cannot add duplicate class.`,
+          },
+        ],
+        registeredClass: null,
       }
     }
 
@@ -124,6 +152,7 @@ export const RegisteredClassMutations = {
             },
           },
         })
+        console.log(registeredClassID)
 
         if (
           !idCheck ||

@@ -50,6 +50,18 @@ export const AuthMutations = {
         token: null,
       }
     }
+    const emailExists = await db.tbl_user.findUnique({
+      where: {
+        email: email.toLowerCase(),
+      },
+    })
+    if (emailExists) {
+      return {
+        userErrors: [{ message: 'Account already exists' }],
+        token: null,
+      }
+    }
+
     const isValidPassword = validator.isLength(password, { min: 8 })
     if (!isValidPassword) {
       return {
@@ -60,7 +72,7 @@ export const AuthMutations = {
     const hashedPassword = await bcrypt.hash(password, 15)
     const user = await db.tbl_user.create({
       data: {
-        email,
+        email: email.toLowerCase(),
         password: hashedPassword,
         staff: false,
         admin: false,
@@ -91,7 +103,7 @@ export const AuthMutations = {
 
     const user = await db.tbl_user.findUnique({
       where: {
-        email,
+        email: email.toLowerCase(),
       },
     })
 

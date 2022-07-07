@@ -60,30 +60,28 @@ export const TeacherMutations = {
           },
         },
       })
-
-      if (idCheck?.tbl_user.id != userInfo.userID) {
-        return {
-          userErrors: [
-            {
-              message: 'Not Authorized to create teacher',
-            },
-          ],
-          teacher: null,
+      if (idCheck?.tbl_user) {
+        if (idCheck.tbl_user.id != userInfo.userID) {
+          return {
+            userErrors: [
+              {
+                message: 'Not Authorized to create teacher',
+              },
+            ],
+            teacher: null,
+          }
         }
       }
     }
     /**
      * Check to see if there is already one teacher listed
      */
-    let numberOfTeachers = await db.tbl_registration.findMany({
+    let teacherExists = await db.tbl_reg_teacher.findUnique({
       where: {
-        id: Number(registrationID),
-        tbl_reg_teacher: {
-          some: {},
-        },
+        regID: Number(registrationID),
       },
     })
-    if (numberOfTeachers[0]) {
+    if (teacherExists) {
       return {
         userErrors: [
           {
@@ -173,15 +171,16 @@ export const TeacherMutations = {
             },
           },
         })
-
-        if (idCheck?.tbl_registration?.tbl_user.id != userInfo.userID) {
-          return {
-            userErrors: [
-              {
-                message: 'Not Authorized to update teacher',
-              },
-            ],
-            teacher: null,
+        if (idCheck?.tbl_registration.tbl_user) {
+          if (idCheck?.tbl_registration?.tbl_user.id != userInfo.userID) {
+            return {
+              userErrors: [
+                {
+                  message: 'Not Authorized to update teacher',
+                },
+              ],
+              teacher: null,
+            }
           }
         }
       }
@@ -266,15 +265,16 @@ export const TeacherMutations = {
             },
           },
         })
-
-        if (idCheck?.tbl_registration?.tbl_user.id != userInfo.userID) {
-          return {
-            userErrors: [
-              {
-                message: 'Not Authorized to delete teacher',
-              },
-            ],
-            teacher: null,
+        if (idCheck?.tbl_registration.tbl_user) {
+          if (idCheck?.tbl_registration?.tbl_user.id != userInfo.userID) {
+            return {
+              userErrors: [
+                {
+                  message: 'Not Authorized to delete teacher',
+                },
+              ],
+              teacher: null,
+            }
           }
         }
       }

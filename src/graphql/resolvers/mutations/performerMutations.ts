@@ -63,7 +63,7 @@ export const PerformerMutations = {
         },
       })
 
-      if (idCheck?.tbl_user.id != userInfo.userID) {
+      if (idCheck?.tbl_user?.id != userInfo.userID) {
         return {
           userErrors: [
             {

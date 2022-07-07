@@ -62,40 +62,39 @@ export const SchoolMutations = {
         },
       })
 
-      if (idCheck?.tbl_user.id != userInfo.userID) {
-        return {
-          userErrors: [
-            {
-              message: 'Not Authorized to create entry',
-            },
-          ],
-          school: null,
+      if (idCheck?.tbl_user) {
+        if (idCheck.tbl_user.id != userInfo.userID) {
+          return {
+            userErrors: [
+              {
+                message: 'Not Authorized to create entry',
+              },
+            ],
+            school: null,
+          }
         }
-      }
-      if (idCheck.performerType != 'SCHOOL') {
-        return {
-          userErrors: [
-            {
-              message: `Cannot add school to ${idCheck.performerType} registration form.`,
-            },
-          ],
-          school: null,
+        if (idCheck.performerType != 'SCHOOL') {
+          return {
+            userErrors: [
+              {
+                message: `Cannot add school to ${idCheck.performerType} registration form.`,
+              },
+            ],
+            school: null,
+          }
         }
       }
       /**
        * Check to see if there is already one school listed if
        * performerType is set to 'SCHOOL'
        */
-      let numberOfSchools = await db.tbl_registration.findMany({
+      let schoolExists = await db.tbl_reg_school.findUnique({
         where: {
-          id: Number(registrationID),
-          tbl_reg_school: {
-            some: {},
-          },
+          regID: Number(registrationID),
         },
       })
 
-      if (numberOfSchools[0] && numberOfSchools[0].performerType === 'SCHOOL') {
+      if (schoolExists) {
         return {
           userErrors: [
             {
@@ -190,14 +189,16 @@ export const SchoolMutations = {
           },
         })
 
-        if (idCheck?.tbl_registration?.tbl_user.id != userInfo.userID) {
-          return {
-            userErrors: [
-              {
-                message: 'Not Authorized to update school',
-              },
-            ],
-            school: null,
+        if (idCheck?.tbl_registration.tbl_user) {
+          if (idCheck?.tbl_registration?.tbl_user.id != userInfo.userID) {
+            return {
+              userErrors: [
+                {
+                  message: 'Not Authorized to update school',
+                },
+              ],
+              school: null,
+            }
           }
         }
       }
@@ -217,6 +218,7 @@ export const SchoolMutations = {
       }),
     }
   },
+
   /**
    * Deletes a school from a registration form
    *
@@ -255,7 +257,7 @@ export const SchoolMutations = {
         return {
           userErrors: [
             {
-              message: 'school does not exist in registration form.',
+              message: 'School does not exist in registration form.',
             },
           ],
           school: null,
@@ -283,14 +285,16 @@ export const SchoolMutations = {
           },
         })
 
-        if (idCheck?.tbl_registration?.tbl_user.id != userInfo.userID) {
-          return {
-            userErrors: [
-              {
-                message: 'Not Authorized to delete school',
-              },
-            ],
-            school: null,
+        if (idCheck?.tbl_registration.tbl_user) {
+          if (idCheck?.tbl_registration?.tbl_user.id != userInfo.userID) {
+            return {
+              userErrors: [
+                {
+                  message: 'Not Authorized to delete school',
+                },
+              ],
+              school: null,
+            }
           }
         }
       }

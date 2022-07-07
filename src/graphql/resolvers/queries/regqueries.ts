@@ -40,7 +40,7 @@ export const registrationQueries = {
       })
     } else {
       return db.tbl_registration.findUnique({
-        where: { id },
+        where: { id: Number(id) },
       })
     }
   },
@@ -67,7 +67,6 @@ export const Registration = {
       where: { regID: id },
     })
   },
-
   registeredClasses: (
     { id }: tbl_registration,
     _: any,
@@ -78,7 +77,6 @@ export const Registration = {
       where: { regID: id },
     })
   },
-
   school: ({ id }: tbl_registration, _: any, { db, userInfo }: Context) => {
     if (!userInfo) return null
     return db.tbl_reg_school.findMany({
@@ -87,7 +85,7 @@ export const Registration = {
   },
   teacher: ({ id }: tbl_registration, _: any, { db, userInfo }: Context) => {
     if (!userInfo) return null
-    return db.tbl_reg_teacher.findMany({
+    return db.tbl_reg_teacher.findUnique({
       where: { regID: id },
     })
   },
