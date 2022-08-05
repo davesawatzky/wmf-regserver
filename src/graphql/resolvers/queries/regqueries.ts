@@ -1,6 +1,6 @@
 import {
   tbl_registration,
-  tbl_reg_classpicks,
+  tbl_reg_classes,
   tbl_reg_performer,
   tbl_user,
 } from '@prisma/client'
@@ -73,7 +73,7 @@ export const Registration = {
     { db, userInfo }: Context
   ) => {
     if (!userInfo) return null
-    return db.tbl_reg_classpicks.findMany({
+    return db.tbl_reg_classes.findMany({
       where: { regID: id },
     })
   },
@@ -92,11 +92,7 @@ export const Registration = {
 }
 
 export const RegisteredClass = {
-  selections: (
-    { id }: tbl_reg_classpicks,
-    _: any,
-    { db, userInfo }: Context
-  ) => {
+  selections: ({ id }: tbl_reg_classes, _: any, { db, userInfo }: Context) => {
     if (!userInfo) return null
     return db.tbl_reg_selection.findMany({
       where: { classpickID: id },

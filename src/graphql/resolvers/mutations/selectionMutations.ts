@@ -16,10 +16,10 @@ export const SelectionMutations = {
   selectionCreate: async (
     _: any,
     {
-      classpickID,
+      registeredClassID,
       selection,
     }: {
-      classpickID: number
+      registeredClassID: number
       selection: tbl_reg_selection
     },
     { db, userInfo }: Context
@@ -42,20 +42,21 @@ export const SelectionMutations = {
           tbl_registration: {
             select: {
               id: true,
-              tbl_reg_classpicks: {
+              tbl_reg_classes: {
                 select: {
                   id: true,
                 },
                 where: {
-                  id: classpickID,
+                  id: +registeredClassID,
                 },
               },
             },
           },
         },
       })
+      console.log(idCheck, userInfo)
 
-      if (!idCheck || idCheck.length > 1 || idCheck[0].id != userInfo.userID) {
+      if (idCheck[0].id != userInfo.userID) {
         return {
           userErrors: [
             {
@@ -67,7 +68,8 @@ export const SelectionMutations = {
       }
     }
 
-    selection.classpickID = Number(classpickID)
+    selection.classpickID = +registeredClassID
+
     return {
       userErrors: [],
       selection: await db.tbl_reg_selection.create({
@@ -120,7 +122,7 @@ export const SelectionMutations = {
             tbl_registration: {
               select: {
                 id: true,
-                tbl_reg_classpicks: {
+                tbl_reg_classes: {
                   select: {
                     id: true,
                     tbl_reg_selection: {
@@ -207,7 +209,7 @@ export const SelectionMutations = {
             tbl_registration: {
               select: {
                 id: true,
-                tbl_reg_classpicks: {
+                tbl_reg_classes: {
                   select: {
                     id: true,
                     tbl_reg_selection: {

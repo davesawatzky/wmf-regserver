@@ -10,15 +10,15 @@ import {
 import { Context } from '../../../index'
 
 interface CategoriesSelect {
-  levelID: number
-  subdisciplineID: number
+  levelID: tbl_classlist
+  subdisciplineID: tbl_classlist
 }
 
 interface ClassSelect {
   classSearchArgs: {
-    subdisciplineID: string
-    levelID: string
-    categoryID: string
+    subdisciplineID: tbl_classlist
+    levelID: tbl_classlist
+    categoryID: tbl_classlist
   }
 }
 
@@ -27,9 +27,9 @@ export const festivalQueries = {
     const { subdisciplineID, levelID, categoryID } = classSearchArgs
     return db.tbl_classlist.findMany({
       where: {
-        subdisciplineID: parseInt(subdisciplineID),
-        levelID: parseInt(levelID),
-        categoryID: parseInt(categoryID),
+        subdisciplineID: +subdisciplineID,
+        levelID: +levelID,
+        categoryID: +categoryID,
       },
     })
   },
@@ -65,8 +65,8 @@ export const festivalQueries = {
     if (levelID && subdisciplineID) {
       const classIDs = await db.tbl_classlist.findMany({
         where: {
-          subdisciplineID: Number(subdisciplineID),
-          levelID: Number(levelID),
+          subdisciplineID: +subdisciplineID,
+          levelID: +levelID,
         },
       })
       const categoryIDs = await classIDs.map((e) => e.categoryID)
@@ -99,10 +99,14 @@ export const festivalQueries = {
       where: { name: { contains: name } },
     })
   },
-  levels: async (_: any, { subdisciplineID }, { db }: Context) => {
+  levels: async (
+    _: any,
+    { subdisciplineID }: tbl_classlist,
+    { db }: Context
+  ) => {
     if (subdisciplineID) {
       const classIDs = await db.tbl_classlist.findMany({
-        where: { subdisciplineID: parseInt(subdisciplineID) },
+        where: { subdisciplineID: +subdisciplineID },
       })
       const levelIDs = await classIDs.map((e) => e.levelID)
       return db.tbl_level.findMany({
@@ -141,7 +145,7 @@ export const festivalQueries = {
   ) => {
     if (disciplineID) {
       return db.tbl_subdiscipline.findMany({
-        where: { disciplineID: Number(disciplineID) },
+        where: { disciplineID: +disciplineID },
       })
     }
     return db.tbl_subdiscipline.findMany()
@@ -234,7 +238,11 @@ export const Level = {
       where: { levelID: id },
     })
   },
-  categories: async ({ id }: tbl_level, { categoryID }, { db }: Context) => {
+  categories: async (
+    { id }: tbl_level,
+    { categoryID }: tbl_classlist,
+    { db }: Context
+  ) => {
     let classIDs: tbl_classlist[]
     if (categoryID) {
       classIDs = await db.tbl_classlist.findMany({
@@ -272,7 +280,11 @@ export const Subdiscipline = {
       where: { id: disciplineID },
     })
   },
-  levels: async ({ id }: tbl_subdiscipline, { levelID }, { db }: Context) => {
+  levels: async (
+    { id }: tbl_subdiscipline,
+    { levelID }: tbl_classlist,
+    { db }: Context
+  ) => {
     let classIDs: tbl_classlist[]
     if (levelID) {
       classIDs = await db.tbl_classlist.findMany({

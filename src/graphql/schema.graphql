@@ -2,387 +2,388 @@ scalar Date
 scalar DateTime
 scalar Duration
 scalar EmailAddress
+scalar Time
 
 enum SGSlabel {
-  SOLO
-  GROUP
-  SCHOOL
+	SOLO
+	GROUP
+	SCHOOL
 }
 
 type Query {
-  classes(SGSlabel: SGSlabel): [Classlist!]!
-  classSearch(classSearchArgs: ClassSearchArgs!): [Classlist!]!
-  classById(id: ID!): Classlist!
-  classByNumber(classNumber: String!): Classlist
-  categories(levelID: ID, subdisciplineID: ID): [Category!]!
-  category(id: ID!): Category!
-  categoriesByName(name: String!): [Category!]!
-  disciplines: [Discipline!]!
-  discipline(id: ID!): Discipline!
-  disciplinesByName(name: String!): [Discipline!]!
-  levels(subdisciplineID: ID): [Level!]!
-  level(id: ID!): Level!
-  levelsByName(name: String!): [Level!]
-  performers: [Performer!]!
-  performer(id: ID): Performer!
-  groups: [Group!]!
-  group(id: ID!): Group!
-  registrations: [Registration!]!
-  registration(id: ID!): Registration!
-  sacredTitles: [Sacred!]!
-  sacredTitle(id: ID!): Sacred!
-  subdisciplines(disciplineID: ID): [Subdiscipline!]!
-  subdiscipline(id: ID!): Subdiscipline!
-  subdisciplinesByName(name: String!): [Subdiscipline!]!
-  trophies: [Trophy!]!
-  trophy(id: ID!): Trophy!
-  users: [User!]!
-  user(id: ID!): User!
+	classes(SGSlabel: SGSlabel): [Classlist!]!
+	classSearch(classSearchArgs: ClassSearchArgs!): [Classlist!]!
+	classById(id: ID!): Classlist!
+	classByNumber(classNumber: String!): Classlist
+	categories(levelID: ID, subdisciplineID: ID): [Category!]!
+	category(id: ID!): Category!
+	categoriesByName(name: String!): [Category!]!
+	disciplines: [Discipline!]!
+	discipline(id: ID!): Discipline!
+	disciplinesByName(name: String!): [Discipline!]!
+	levels(subdisciplineID: ID): [Level!]!
+	level(id: ID!): Level!
+	levelsByName(name: String!): [Level!]
+	performers: [Performer!]!
+	performer(id: ID): Performer!
+	groups: [Group!]!
+	group(id: ID!): Group!
+	registrations: [Registration!]!
+	registration(id: ID!): Registration!
+	sacredTitles: [Sacred!]!
+	sacredTitle(id: ID!): Sacred!
+	subdisciplines(disciplineID: ID): [Subdiscipline!]!
+	subdiscipline(id: ID!): Subdiscipline!
+	subdisciplinesByName(name: String!): [Subdiscipline!]!
+	trophies: [Trophy!]!
+	trophy(id: ID!): Trophy!
+	users: [User!]!
+	user(id: ID!): User!
 }
 
 type Mutation {
-  signup(credentials: CredentialsInput!): AuthPayload!
-  signin(credentials: CredentialsInput!): AuthPayload!
-  registrationCreate(
-    performerType: SGSlabel!
-    label: String!
-  ): RegistrationPayload!
-  registrationUpdate(
-    registrationID: ID!
-    registration: RegistrationInput!
-  ): RegistrationPayload!
-  registrationDelete(id: ID!): RegistrationPayload!
-  performerCreate(
-    registrationID: ID!
-    performer: PerformerInput!
-  ): PerformerPayload!
-  performerUpdate(
-    performerID: ID!
-    performer: PerformerInput!
-  ): PerformerPayload!
-  performerDelete(performerID: ID!): PerformerPayload!
-  schoolCreate(registrationID: ID!, school: SchoolInput!): SchoolPayload!
-  schoolUpdate(schoolID: ID!, school: SchoolInput!): SchoolPayload!
-  schoolDelete(schoolID: ID!): SchoolPayload!
-  teacherCreate(registrationID: ID!, teacher: TeacherInput!): TeacherPayload!
-  teacherUpdate(teacherID: ID!, teacher: TeacherInput!): TeacherPayload!
-  teacherDelete(teacherID: ID!): TeacherPayload!
-  groupCreate(registrationID: ID!, group: GroupInput!): GroupPayload!
-  groupUpdate(groupID: ID!, group: GroupInput!): GroupPayload!
-  groupDelete(groupID: ID!): GroupPayload!
-  selectionCreate(
-    registrationID: ID!
-    selection: SelectionInput!
-  ): SelectionPayload!
-  selectionUpdate(
-    selectionID: ID!
-    selection: SelectionInput!
-  ): SelectionPayload!
-  selectionDelete(selectionID: ID!): SelectionPayload!
-  registeredClassCreate(
-    registrationID: ID!
-    registeredClass: RegisteredClassInput!
-  ): RegisteredClassPayload!
-  registeredClassUpdate(
-    registeredClassID: ID!
-    registeredClass: RegisteredClassInput!
-  ): RegisteredClassPayload!
-  registeredClassDelete(registeredClassID: ID!): RegisteredClassPayload!
+	signup(credentials: CredentialsInput!): AuthPayload!
+	signin(credentials: CredentialsInput!): AuthPayload!
+	registrationCreate(
+		performerType: SGSlabel!
+		label: String
+	): RegistrationPayload!
+	registrationUpdate(
+		registrationID: ID!
+		registration: RegistrationInput!
+	): RegistrationPayload!
+	registrationDelete(id: ID!): RegistrationPayload!
+	performerCreate(
+		registrationID: ID!
+		performer: PerformerInput!
+	): PerformerPayload!
+	performerUpdate(
+		performerID: ID!
+		performer: PerformerInput!
+	): PerformerPayload!
+	performerDelete(performerID: ID!): PerformerPayload!
+	schoolCreate(registrationID: ID!, school: SchoolInput!): SchoolPayload!
+	schoolUpdate(schoolID: ID!, school: SchoolInput!): SchoolPayload!
+	schoolDelete(schoolID: ID!): SchoolPayload!
+	teacherCreate(registrationID: ID!, teacher: TeacherInput!): TeacherPayload!
+	teacherUpdate(teacherID: ID!, teacher: TeacherInput!): TeacherPayload!
+	teacherDelete(teacherID: ID!): TeacherPayload!
+	groupCreate(registrationID: ID!, group: GroupInput!): GroupPayload!
+	groupUpdate(groupID: ID!, group: GroupInput!): GroupPayload!
+	groupDelete(groupID: ID!): GroupPayload!
+	selectionCreate(
+		registeredClassID: ID!
+		selection: SelectionInput!
+	): SelectionPayload!
+	selectionUpdate(
+		selectionID: ID!
+		selection: SelectionInput!
+	): SelectionPayload!
+	selectionDelete(selectionID: ID!): SelectionPayload!
+	registeredClassCreate(
+		registrationID: ID!
+		registeredClass: RegisteredClassInput!
+	): RegisteredClassPayload!
+	registeredClassUpdate(
+		registeredClassID: ID!
+		registeredClass: RegisteredClassInput!
+	): RegisteredClassPayload!
+	registeredClassDelete(registeredClassID: ID!): RegisteredClassPayload!
 }
 
 type Category {
-  id: ID!
-  name: String!
-  description: String
-  requiredComposer: String
-  classes: [Classlist!]!
+	id: ID!
+	name: String!
+	description: String
+	requiredComposer: String
+	classes: [Classlist!]!
 }
 
 input ClassSearchArgs {
-  subdisciplineID: ID
-  levelID: ID
-  categoryID: ID
+	subdisciplineID: ID
+	levelID: ID
+	categoryID: ID
 }
 
 type Classlist {
-  id: ID!
-  classNumber: String!
-  subdiscipline: Subdiscipline!
-  level: Level!
-  category: Category!
-  maxSelection: Int!
-  minSelection: Int!
-  requiredSelection: String
-  SGSlabel: SGSlabel!
-  trophies: [Trophy]
+	id: ID!
+	classNumber: String!
+	subdiscipline: Subdiscipline!
+	level: Level!
+	category: Category!
+	maxSelection: Int!
+	minSelection: Int!
+	requiredSelection: String
+	SGSlabel: SGSlabel!
+	trophies: [Trophy]
 }
 
 type ClassTrophy {
-  classID: ID!
-  trophyID: ID!
+	classID: ID!
+	trophyID: ID!
 }
 
 type Discipline {
-  id: ID!
-  name: String!
-  subdisciplines: [Subdiscipline!]!
+	id: ID!
+	name: String!
+	subdisciplines: [Subdiscipline!]!
 }
 
 type Group {
-  id: ID!
-  name: String
-  groupType: String
-  numberOfPerformers: Int
-  age: Int
-  instruments: String
-  performerInOtherClasses: String
-  numberOfChaperones: Int
-  numberOfWheelchairs: Int
-  earliestPerformingTime: String
-  latestPerformingTime: String
-  unavailable: [Unavailable]
+	id: ID!
+	name: String
+	groupType: String
+	numberOfPerformers: Int
+	age: Int
+	instruments: String
+	performerInOtherClasses: String
+	numberOfChaperones: Int
+	numberOfWheelchairs: Int
+	earliestPerformingTime: String
+	latestPerformingTime: String
+	unavailable: [Unavailable]
 }
 
 input GroupInput {
-  name: String
-  groupType: String
-  numberOfPerformers: Int
-  age: Int
-  instruments: String
-  performerInOtherClasses: String
-  numberOfChaperones: Int
-  numberOfWheelchairs: Int
-  earliestPerformingTime: String
-  latestPerformingTime: String
+	name: String
+	groupType: String
+	numberOfPerformers: Int
+	age: Int
+	instruments: String
+	performerInOtherClasses: String
+	numberOfChaperones: Int
+	numberOfWheelchairs: Int
+	earliestPerformingTime: String
+	latestPerformingTime: String
 }
 type Level {
-  id: ID!
-  name: String!
-  description: String
-  categories(categoryID: ID): [Category]
-  classes: [Classlist!]!
+	id: ID!
+	name: String!
+	description: String
+	categories(categoryID: ID): [Category]
+	classes: [Classlist!]!
 }
 type Performer {
-  id: ID!
-  firstName: String
-  lastName: String
-  address: String
-  city: String
-  province: String
-  postalCode: String
-  phone: String
-  email: EmailAddress
-  age: Int
-  otherClasses: String
-  instrument: String
-  level: Int
+	id: ID!
+	firstName: String
+	lastName: String
+	address: String
+	city: String
+	province: String
+	postalCode: String
+	phone: String
+	email: EmailAddress
+	age: Int
+	otherClasses: String
+	instrument: String
+	level: Int
 }
 
 input PerformerInput {
-  firstName: String
-  lastName: String
-  address: String
-  city: String
-  province: String
-  postalCode: String
-  phone: String
-  email: EmailAddress
-  age: Int
-  otherClasses: String
-  instrument: String
-  level: Int
+	firstName: String
+	lastName: String
+	address: String
+	city: String!
+	province: String!
+	postalCode: String
+	phone: String
+	email: EmailAddress
+	age: Int
+	otherClasses: String
+	instrument: String
+	level: Int
 }
 
 type Registration {
-  id: ID!
-  label: String!
-  performers: [Performer]
-  registeredClasses: [RegisteredClass]
-  groups: [Group]
-  teacher: Teacher
-  school: School
-  performerType: SGSlabel!
-  submittedAt: DateTime
-  totalAmt: Float
-  payedAmt: Float
-  transactionInfo: String
-  confirmation: String
-  createdAt: DateTime
+	id: ID!
+	label: String
+	performers: [Performer]
+	registeredClasses: [RegisteredClass]
+	groups: [Group]
+	teacher: Teacher
+	school: School
+	performerType: SGSlabel!
+	submittedAt: DateTime
+	totalAmt: Float
+	payedAmt: Float
+	transactionInfo: String
+	confirmation: String
+	createdAt: DateTime
 }
 
 input RegistrationInput {
-  label: String
-  performerType: SGSlabel
-  dateSubmitted: String
-  submittedAt: String
-  totalAmt: Float
-  payedAmt: Float
-  transactionInfo: String
-  confirmation: String
+	label: String
+	performerType: SGSlabel
+	dateSubmitted: String
+	submittedAt: String
+	totalAmt: Float
+	payedAmt: Float
+	transactionInfo: String
+	confirmation: String
 }
 
 type RegisteredClass {
-  id: ID!
-  selections: [Selection]
-  classNumber: String
-  discipline: String
-  subdiscipline: String
-  level: String
-  category: String
-  numberOfSelections: Int
+	id: ID!
+	selections: [Selection]
+	classNumber: String
+	discipline: String
+	subdiscipline: String
+	level: String
+	category: String
+	numberOfSelections: Int
 }
 
 input RegisteredClassInput {
-  classNumber: String
-  discipline: String
-  subdiscipline: String
-  level: String
-  category: String
-  numberOfSelections: Int
+	classNumber: String
+	discipline: String
+	subdiscipline: String
+	level: String
+	category: String
+	numberOfSelections: Int
 }
 
 type Selection {
-  id: ID!
-  title: String!
-  largerWork: String
-  movement: String
-  composer: String
-  duration: String
+	id: ID!
+	title: String!
+	largerWork: String
+	movement: String
+	composer: String
+	duration: String
 }
 
 input SelectionInput {
-  title: String!
-  largerWork: String
-  movement: String
-  composer: String
-  duration: String
+	title: String!
+	largerWork: String
+	movement: String
+	composer: String
+	duration: String
 }
 
 type Sacred {
-  id: ID!
-  composer: String!
-  largeWork: String
-  title: String!
+	id: ID!
+	composer: String!
+	largeWork: String
+	title: String!
 }
 
 type School {
-  id: ID!
-  name: String!
-  division: String
-  address: String
-  city: String
-  province: String
-  postalCode: String
-  phone: String
+	id: ID!
+	name: String!
+	division: String
+	address: String
+	city: String
+	province: String
+	postalCode: String
+	phone: String
 }
 
 input SchoolInput {
-  name: String
-  division: String
-  address: String
-  city: String
-  province: String
-  postalCode: String
-  phone: String
+	name: String
+	division: String
+	address: String
+	city: String
+	province: String
+	postalCode: String
+	phone: String
 }
 
 type Subdiscipline {
-  id: ID!
-  name: String!
-  discipline: Discipline!
-  description: String
-  maxPerformers: Int!
-  minPerformers: Int!
-  levels(levelID: ID): [Level]
-  classes: [Classlist!]!
+	id: ID!
+	name: String!
+	discipline: Discipline!
+	description: String
+	maxPerformers: Int!
+	minPerformers: Int!
+	levels(levelID: ID): [Level]
+	classes: [Classlist!]!
 }
 
 type Teacher {
-  id: ID!
-  prefix: String
-  firstName: String!
-  lastName: String!
-  address: String
-  city: String
-  province: String
-  postalCode: String
-  phone: String
-  email: EmailAddress
+	id: ID!
+	prefix: String
+	firstName: String
+	lastName: String
+	address: String
+	city: String
+	province: String
+	postalCode: String
+	phone: String
+	email: EmailAddress
 }
 
 input TeacherInput {
-  prefix: String
-  firstName: String!
-  lastName: String!
-  address: String
-  city: String
-  province: String
-  postalCode: String
-  phone: String
-  email: EmailAddress
+	prefix: String
+	firstName: String
+	lastName: String
+	address: String
+	city: String!
+	province: String!
+	postalCode: String
+	phone: String
+	email: EmailAddress
 }
 
 type Trophy {
-  id: ID!
-  name: String!
-  description: String!
-  classes: [Classlist!]!
+	id: ID!
+	name: String!
+	description: String!
+	classes: [Classlist!]!
 }
 
 type Unavailable {
-  id: ID!
-  date: String
-  time: String
+	id: ID!
+	date: String
+	time: String
 }
 
 type User {
-  id: ID!
-  email: EmailAddress!
-  staff: Boolean
-  admin: Boolean
-  registrations: [Registration!]!
+	id: ID!
+	email: EmailAddress!
+	staff: Boolean
+	admin: Boolean
+	registrations: [Registration!]!
 }
 type AuthPayload {
-  userErrors: [UserError!]!
-  token: String
+	userErrors: [UserError!]!
+	token: String
 }
 type UserError {
-  message: String!
-  field: [String!]!
+	message: String!
+	field: [String!]!
 }
 input CredentialsInput {
-  email: EmailAddress!
-  password: String!
+	email: EmailAddress!
+	password: String!
 }
 type RegistrationPayload {
-  userErrors: [UserError!]!
-  registration: Registration
+	userErrors: [UserError!]!
+	registration: Registration
 }
 
 type PerformerPayload {
-  userErrors: [UserError!]!
-  performer: Performer
+	userErrors: [UserError!]!
+	performer: Performer
 }
 type GroupPayload {
-  userErrors: [UserError!]!
-  group: Group
+	userErrors: [UserError!]!
+	group: Group
 }
 
 type RegisteredClassPayload {
-  userErrors: [UserError!]!
-  registeredClass: RegisteredClass
+	userErrors: [UserError!]!
+	registeredClass: RegisteredClass
 }
 
 type SchoolPayload {
-  userErrors: [UserError!]!
-  school: School
+	userErrors: [UserError!]!
+	school: School
 }
 
 type TeacherPayload {
-  userErrors: [UserError!]!
-  teacher: Teacher
+	userErrors: [UserError!]!
+	teacher: Teacher
 }
 type SelectionPayload {
-  userErrors: [UserError!]!
-  selection: Selection
+	userErrors: [UserError!]!
+	selection: Selection
 }
