@@ -1,4 +1,4 @@
-import { Context } from '../../../index'
+import { Context } from '../../../server'
 import validator from 'validator'
 import { Prisma, tbl_registration, tbl_reg_classes } from '@prisma/client'
 
@@ -86,7 +86,9 @@ export const RegisteredClassMutations = {
 				registeredClass: null,
 			}
 		}
-
+		/**
+		 * If everything checks out, create new registered class
+		 */
 		registeredClass.regID = +registrationID
 		return {
 			userErrors: [],

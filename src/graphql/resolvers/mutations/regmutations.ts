@@ -1,4 +1,4 @@
-import { Context } from '../../../index'
+import { Context } from '../../../server'
 import validator from 'validator'
 import { Prisma, tbl_registration } from '@prisma/client'
 import { canUserMutateInfo } from '../../../utils/canUserMutateInfo'
