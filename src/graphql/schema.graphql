@@ -35,6 +35,10 @@ type Query {
 	subdisciplines(disciplineID: ID): [Subdiscipline!]!
 	subdiscipline(id: ID!): Subdiscipline!
 	subdisciplinesByName(name: String!): [Subdiscipline!]!
+	subdisciplinesByType(
+		disciplineID: ID!
+		SGSlabel: SGSlabel!
+	): [Subdiscipline!]!
 	trophies: [Trophy!]!
 	trophy(id: ID!): Trophy!
 	users: [User!]!
@@ -123,6 +127,11 @@ type ClassTrophy {
 	trophyID: ID!
 }
 
+input CredentialsInput {
+	email: EmailAddress!
+	password: String!
+}
+
 type Discipline {
 	id: ID!
 	name: String!
@@ -156,6 +165,7 @@ input GroupInput {
 	earliestPerformingTime: String
 	latestPerformingTime: String
 }
+
 type Level {
 	id: ID!
 	name: String!
@@ -163,6 +173,7 @@ type Level {
 	categories(categoryID: ID): [Category]
 	classes: [Classlist!]!
 }
+
 type Performer {
 	id: ID!
 	firstName: String
@@ -294,6 +305,7 @@ type Subdiscipline {
 	description: String
 	maxPerformers: Int!
 	minPerformers: Int!
+	SGSlabel: SGSlabel!
 	levels(levelID: ID): [Level]
 	classes: [Classlist!]!
 }
@@ -343,30 +355,20 @@ type User {
 	admin: Boolean
 	registrations: [Registration!]!
 }
+
 type AuthPayload {
 	userErrors: [UserError!]!
 	token: String
 }
-type UserError {
-	message: String!
-	field: [String!]!
-}
-input CredentialsInput {
-	email: EmailAddress!
-	password: String!
-}
-type RegistrationPayload {
+
+type GroupPayload {
 	userErrors: [UserError!]!
-	registration: Registration
+	group: Group
 }
 
 type PerformerPayload {
 	userErrors: [UserError!]!
 	performer: Performer
-}
-type GroupPayload {
-	userErrors: [UserError!]!
-	group: Group
 }
 
 type RegisteredClassPayload {
@@ -374,16 +376,27 @@ type RegisteredClassPayload {
 	registeredClass: RegisteredClass
 }
 
+type RegistrationPayload {
+	userErrors: [UserError!]!
+	registration: Registration
+}
+
 type SchoolPayload {
 	userErrors: [UserError!]!
 	school: School
+}
+
+type SelectionPayload {
+	userErrors: [UserError!]!
+	selection: Selection
 }
 
 type TeacherPayload {
 	userErrors: [UserError!]!
 	teacher: Teacher
 }
-type SelectionPayload {
-	userErrors: [UserError!]!
-	selection: Selection
+
+type UserError {
+	message: String!
+	field: [String!]!
 }

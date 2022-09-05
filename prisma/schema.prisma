@@ -211,13 +211,14 @@ model tbl_sacred {
 }
 
 model tbl_subdiscipline {
-  id             Int             @id @default(autoincrement())
+  id             Int                        @id @default(autoincrement())
   disciplineID   Int
-  name           String          @db.VarChar(50)
-  description    String?         @db.Text
+  name           String                     @db.VarChar(50)
+  description    String?                    @db.Text
   maxPerformers  Int?
   minPerformers  Int?
-  tbl_discipline tbl_discipline  @relation(fields: [disciplineID], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "discipline_subdiscipline")
+  SGSlabel       tbl_subdiscipline_SGSlabel
+  tbl_discipline tbl_discipline             @relation(fields: [disciplineID], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "discipline_subdiscipline")
   tbl_classlist  tbl_classlist[]
 
   @@index([disciplineID], map: "discipline_subdiscipline")
@@ -248,6 +249,12 @@ enum tbl_SGS {
 }
 
 enum tbl_registration_performerType {
+  SOLO
+  GROUP
+  SCHOOL
+}
+
+enum tbl_subdiscipline_SGSlabel {
   SOLO
   GROUP
   SCHOOL

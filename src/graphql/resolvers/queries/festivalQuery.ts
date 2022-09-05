@@ -164,6 +164,21 @@ export const festivalQueries = {
 			where: { name: { contains: name } },
 		})
 	},
+	subdisciplinesByType: (
+		_: any,
+		{ disciplineID, SGSlabel }: tbl_subdiscipline,
+		{ db }: Context
+	) => {
+		if (SGSlabel && !disciplineID) {
+			return db.tbl_subdiscipline.findMany({
+				where: { SGSlabel },
+			})
+		} else if (SGSlabel && disciplineID) {
+			return db.tbl_subdiscipline.findMany({
+				where: { disciplineID: +disciplineID, SGSlabel },
+			})
+		}
+	},
 	trophies: (_: any, __: any, { db }: Context) => {
 		return db.tbl_trophy.findMany()
 	},
