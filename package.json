@@ -6,8 +6,9 @@
 	"scripts": {
 		"start:dev": "ts-node-dev --watch ./**/*.ts --respawn --transpile-only src/server.ts",
 		"test": "echo \"Error: no test specified\" && exit 1",
+		"generate": "prisma generate",
 		"build": "tsc --build",
-		"start": "nodemon ./dist/server.js"
+		"start": "node ./dist/server.js"
 	},
 	"author": "David Sawatzky at Diatonic Web Development",
 	"license": "ISC",
