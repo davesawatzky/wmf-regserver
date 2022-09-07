@@ -1,4 +1,7 @@
 {
+	"engines": {
+		"node": "16.16.0"
+	},
 	"name": "wmf-regserver",
 	"version": "1.0.0",
 	"description": "Winnipeg Music Festival Registration Server",
