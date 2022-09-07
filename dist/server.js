@@ -111,6 +111,7 @@ function startApolloServer() {
                                 });
                             });
                         },
+                        cache: 'bounded',
                         plugins: [(0, apollo_server_core_1.ApolloServerPluginDrainHttpServer)({ httpServer: httpServer })],
                     });
                     return [4, apolloServer.start()];
