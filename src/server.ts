@@ -58,6 +58,7 @@ async function startApolloServer() {
 				userInfo,
 			}
 		},
+		cache: 'bounded',
 		plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
 	})
 	await apolloServer.start()
