@@ -8,6 +8,7 @@ enum SGSlabel {
 	SOLO
 	GROUP
 	SCHOOL
+	COMMUNITY
 }
 
 type Query {
@@ -35,10 +36,7 @@ type Query {
 	subdisciplines(disciplineID: ID): [Subdiscipline!]!
 	subdiscipline(id: ID!): Subdiscipline!
 	subdisciplinesByName(name: String!): [Subdiscipline!]!
-	subdisciplinesByType(
-		disciplineID: ID!
-		SGSlabel: SGSlabel!
-	): [Subdiscipline!]!
+	subdisciplinesByType(disciplineID: ID, SGSlabel: SGSlabel!): [Subdiscipline!]!
 	trophies: [Trophy!]!
 	trophy(id: ID!): Trophy!
 	users: [User!]!
@@ -48,15 +46,21 @@ type Query {
 type Mutation {
 	signup(credentials: CredentialsInput!): AuthPayload!
 	signin(credentials: CredentialsInput!): AuthPayload!
-	registrationCreate(
-		performerType: SGSlabel!
-		label: String
-	): RegistrationPayload!
-	registrationUpdate(
+
+	communityCreate(
 		registrationID: ID!
-		registration: RegistrationInput!
-	): RegistrationPayload!
-	registrationDelete(id: ID!): RegistrationPayload!
+		community: CommunityInput!
+	): CommunityPayload!
+	communityUpdate(
+		communityID: ID!
+		community: CommunityInput!
+	): CommunityPayload!
+	communityDelete(communityID: ID!): CommunityPayload!
+
+	groupCreate(registrationID: ID!, group: GroupInput!): GroupPayload!
+	groupUpdate(groupID: ID!, group: GroupInput!): GroupPayload!
+	groupDelete(groupID: ID!): GroupPayload!
+
 	performerCreate(
 		registrationID: ID!
 		performer: PerformerInput!
@@ -66,24 +70,17 @@ type Mutation {
 		performer: PerformerInput!
 	): PerformerPayload!
 	performerDelete(performerID: ID!): PerformerPayload!
-	schoolCreate(registrationID: ID!, school: SchoolInput!): SchoolPayload!
-	schoolUpdate(schoolID: ID!, school: SchoolInput!): SchoolPayload!
-	schoolDelete(schoolID: ID!): SchoolPayload!
-	teacherCreate(registrationID: ID!, teacher: TeacherInput!): TeacherPayload!
-	teacherUpdate(teacherID: ID!, teacher: TeacherInput!): TeacherPayload!
-	teacherDelete(teacherID: ID!): TeacherPayload!
-	groupCreate(registrationID: ID!, group: GroupInput!): GroupPayload!
-	groupUpdate(groupID: ID!, group: GroupInput!): GroupPayload!
-	groupDelete(groupID: ID!): GroupPayload!
-	selectionCreate(
-		registeredClassID: ID!
-		selection: SelectionInput!
-	): SelectionPayload!
-	selectionUpdate(
-		selectionID: ID!
-		selection: SelectionInput!
-	): SelectionPayload!
-	selectionDelete(selectionID: ID!): SelectionPayload!
+
+	registrationCreate(
+		performerType: SGSlabel!
+		label: String
+	): RegistrationPayload!
+	registrationUpdate(
+		registrationID: ID!
+		registration: RegistrationInput!
+	): RegistrationPayload!
+	registrationDelete(id: ID!): RegistrationPayload!
+
 	registeredClassCreate(
 		registrationID: ID!
 		registeredClass: RegisteredClassInput!
@@ -93,6 +90,24 @@ type Mutation {
 		registeredClass: RegisteredClassInput!
 	): RegisteredClassPayload!
 	registeredClassDelete(registeredClassID: ID!): RegisteredClassPayload!
+
+	schoolCreate(registrationID: ID!, school: SchoolInput!): SchoolPayload!
+	schoolUpdate(schoolID: ID!, school: SchoolInput!): SchoolPayload!
+	schoolDelete(schoolID: ID!): SchoolPayload!
+
+	selectionCreate(
+		registeredClassID: ID!
+		selection: SelectionInput!
+	): SelectionPayload!
+	selectionUpdate(
+		selectionID: ID!
+		selection: SelectionInput!
+	): SelectionPayload!
+	selectionDelete(selectionID: ID!): SelectionPayload!
+
+	teacherCreate(registrationID: ID!, teacher: TeacherInput!): TeacherPayload!
+	teacherUpdate(teacherID: ID!, teacher: TeacherInput!): TeacherPayload!
+	teacherDelete(teacherID: ID!): TeacherPayload!
 }
 
 type Category {
@@ -121,10 +136,28 @@ type Classlist {
 	SGSlabel: SGSlabel!
 	trophies: [Trophy]
 }
-
 type ClassTrophy {
 	classID: ID!
 	trophyID: ID!
+}
+type Community {
+	id: ID!
+	name: String!
+	address: String
+	city: String
+	province: String
+	postalCode: String
+	email: String
+	phone: String
+}
+input CommunityInput {
+	name: String
+	address: String
+	city: String
+	province: String
+	postalCode: String
+	email: String
+	phone: String
 }
 
 input CredentialsInput {
@@ -211,6 +244,7 @@ type Registration {
 	performers: [Performer]
 	registeredClasses: [RegisteredClass]
 	groups: [Group]
+	communities: [Community]
 	teacher: Teacher
 	school: School
 	performerType: SGSlabel!
@@ -303,7 +337,7 @@ type Subdiscipline {
 	name: String!
 	discipline: Discipline!
 	description: String
-	maxPerformers: Int!
+	maxPerformers: Int
 	minPerformers: Int!
 	SGSlabel: SGSlabel!
 	levels(levelID: ID): [Level]
@@ -360,7 +394,10 @@ type AuthPayload {
 	userErrors: [UserError!]!
 	token: String
 }
-
+type CommunityPayload {
+	userErrors: [UserError!]!
+	community: Community
+}
 type GroupPayload {
 	userErrors: [UserError!]!
 	group: Group

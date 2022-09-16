@@ -44,7 +44,6 @@ async function startApolloServer() {
 		.use(cors())
 		.use(express.urlencoded({ extended: true }))
 		.disable('x-powered-by')
-	// .use(cors(config.cors))
 
 	const httpServer = http.createServer(app)
 

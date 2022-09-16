@@ -61,6 +61,16 @@ export const Registration = {
 			where: { regID: id },
 		})
 	},
+	communities: (
+		{ id }: tbl_registration,
+		_: any,
+		{ db, userInfo }: Context
+	) => {
+		if (!userInfo) return null
+		return db.tbl_reg_community.findMany({
+			where: { regID: id },
+		})
+	},
 	groups: ({ id }: tbl_registration, _: any, { db, userInfo }: Context) => {
 		if (!userInfo) return null
 		return db.tbl_reg_group.findMany({

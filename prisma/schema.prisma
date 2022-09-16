@@ -195,6 +195,7 @@ model tbl_registration {
   updatedAt         DateTime                       @default(now()) @updatedAt @db.DateTime(0)
   tbl_user          tbl_user?                      @relation(fields: [userID], references: [id], onUpdate: Restrict, map: "FK_tbl_registration_tbl_user")
   tbl_reg_classes   tbl_reg_classes[]
+  tbl_reg_community tbl_reg_community?
   tbl_reg_group     tbl_reg_group[]
   tbl_reg_performer tbl_reg_performer[]
   tbl_reg_school    tbl_reg_school?
@@ -242,20 +243,40 @@ model tbl_user {
   tbl_registration tbl_registration[]
 }
 
+model tbl_reg_community {
+  id               Int              @id @default(autoincrement())
+  regID            Int              @unique(map: "school_constraint")
+  name             String           @db.VarChar(50)
+  address          String?          @db.VarChar(100)
+  city             String?          @db.VarChar(30)
+  province         String?          @db.VarChar(30)
+  postalCode       String?          @db.VarChar(6)
+  phone            String?          @db.VarChar(14)
+  email            String?          @db.VarChar(50)
+  createdAt        DateTime         @default(now()) @db.DateTime(0)
+  updatedAt        DateTime         @default(now()) @db.DateTime(0)
+  tbl_registration tbl_registration @relation(fields: [regID], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "tbl_reg_community_ibfk_1")
+
+  @@index([regID], map: "school_registration")
+}
+
 enum tbl_SGS {
   SOLO
   GROUP
   SCHOOL
+  COMMUNITY
 }
 
 enum tbl_registration_performerType {
   SOLO
   GROUP
   SCHOOL
+  COMMUNITY
 }
 
 enum tbl_subdiscipline_SGSlabel {
   SOLO
   GROUP
   SCHOOL
+  COMMUNITY
 }

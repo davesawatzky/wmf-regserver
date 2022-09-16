@@ -7,6 +7,7 @@ enum SGSlabel {
 	SOLO = 'SOLO',
 	GROUP = 'GROUP',
 	SCHOOL = 'SCHOOL',
+	COMMUNITY = 'COMMUNITY',
 }
 
 interface RegistrationPayloadType {
