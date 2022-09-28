@@ -89,7 +89,7 @@ export const PerformerMutations = {
 
 			if (
 				numberOfPerformers[0] &&
-				numberOfPerformers[0].performerType === 'SOLO'
+				numberOfPerformers[0].performerType == 'SOLO'
 			) {
 				return {
 					userErrors: [
@@ -104,17 +104,17 @@ export const PerformerMutations = {
 			/**
 			 * Verify that the performingType is set to 'SOLO'.
 			 */
-			if (idCheck.performerType != 'SOLO') {
-				return {
-					userErrors: [
-						{
-							message:
-								'Solo performers can only be added to solo registration form',
-						},
-					],
-					performer: null,
-				}
-			}
+			// if (numberOfPerformers[0]. > 0 && idCheck.performerType == 'SOLO') {
+			// 	return {
+			// 		userErrors: [
+			// 			{
+			// 				message:
+			// 					'Solo performers can only be added to solo registration form',
+			// 			},
+			// 		],
+			// 		performer: null,
+			// 	}
+			// }
 		}
 		/**
 		 * Adds the Performer and any details into registration record
@@ -165,7 +165,7 @@ export const PerformerMutations = {
 			let performerExists: tbl_reg_performer | null =
 				await db.tbl_reg_performer.findUnique({
 					where: {
-						id: Number(performerID),
+						id: +performerID,
 					},
 				})
 			if (!performerExists) {
@@ -187,7 +187,7 @@ export const PerformerMutations = {
 
 				let idCheck = await db.tbl_reg_performer.findUnique({
 					where: {
-						id: Number(performerID),
+						id: +performerID,
 					},
 					select: {
 						id: true,
@@ -223,7 +223,7 @@ export const PerformerMutations = {
 					...performer,
 				},
 				where: {
-					id: Number(performerID),
+					id: +performerID,
 				},
 			}),
 		}
@@ -254,7 +254,7 @@ export const PerformerMutations = {
 			let performerExists: tbl_reg_performer | null =
 				await db.tbl_reg_performer.findUnique({
 					where: {
-						id: Number(performerID),
+						id: +performerID,
 					},
 				})
 			if (!performerExists) {
@@ -275,7 +275,7 @@ export const PerformerMutations = {
 				 */
 				let idCheck = await db.tbl_reg_performer.findUnique({
 					where: {
-						id: Number(performerID),
+						id: +performerID,
 					},
 					select: {
 						id: true,
@@ -305,7 +305,7 @@ export const PerformerMutations = {
 			userErrors: [],
 			performer: await db.tbl_reg_performer.delete({
 				where: {
-					id: Number(performerID),
+					id: +performerID,
 				},
 			}),
 		}

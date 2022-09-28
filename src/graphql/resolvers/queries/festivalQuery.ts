@@ -4,6 +4,7 @@ import {
 	tbl_discipline,
 	tbl_level,
 	tbl_sacred,
+	tbl_SGS,
 	tbl_subdiscipline,
 	tbl_trophy,
 } from '@prisma/client'
@@ -97,6 +98,25 @@ export const festivalQueries = {
 	disciplinesByName: (_: any, { name }: tbl_discipline, { db }: Context) => {
 		return db.tbl_discipline.findMany({
 			where: { name: { contains: name } },
+		})
+	},
+	disciplinesByType: (
+		_: any,
+		{ SGSlabel }: { SGSlabel: tbl_SGS },
+		{ db }: Context
+	) => {
+		return db.tbl_discipline.findMany({
+			where: {
+				tbl_subdiscipline: {
+					some: {
+						tbl_classlist: {
+							some: {
+								SGSlabel: SGSlabel,
+							},
+						},
+					},
+				},
+			},
 		})
 	},
 	levels: async (

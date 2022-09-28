@@ -14,14 +14,13 @@ interface CommunityPayloadType {
 
 export const CommunityMutations = {
 	/**
-	 *
 	 * Create Community Group
 	 *
 	 * @param registrationID The id of the registration form.
 	 * @param community The community details to add to the registration.
 	 *
 	 **/
-	schoolCreate: async (
+	communityCreate: async (
 		_: any,
 		{
 			registrationID,
@@ -127,7 +126,7 @@ export const CommunityMutations = {
 	 * @param community The community object containing all the details
 	 * @returns
 	 */
-	schoolUpdate: async (
+	communityUpdate: async (
 		_: any,
 		{
 			communityID,
@@ -228,7 +227,7 @@ export const CommunityMutations = {
 	 * @param communityID The id of the community in the database
 	 * @returns community object
 	 */
-	schoolDelete: async (
+	communityDelete: async (
 		_: any,
 		{ communityID }: { communityID: tbl_reg_community['id'] },
 		{ db, userInfo }: Context

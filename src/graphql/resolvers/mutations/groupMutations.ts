@@ -87,7 +87,6 @@ export const GroupMutations = {
 		 * Enter group details into the database and registration form.
 		 */
 		group.regID = Number(registrationID)
-		console.log(group)
 
 		return {
 			userErrors: [],
@@ -98,6 +97,7 @@ export const GroupMutations = {
 			}),
 		}
 	},
+
 	/**
 	 * Update an existing group
 	 *
@@ -193,6 +193,7 @@ export const GroupMutations = {
 			}),
 		}
 	},
+
 	/**
 	 * Delete group from the database and registration form
 	 *

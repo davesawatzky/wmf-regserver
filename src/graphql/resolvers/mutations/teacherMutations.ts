@@ -265,16 +265,18 @@ export const TeacherMutations = {
 						},
 					},
 				})
-				if (idCheck?.tbl_registration.tbl_user) {
-					if (idCheck?.tbl_registration?.tbl_user.id != userInfo.userID) {
-						return {
-							userErrors: [
-								{
-									message: 'Not Authorized to delete teacher',
-								},
-							],
-							teacher: null,
-						}
+
+				if (
+					!idCheck ||
+					idCheck.tbl_registration.tbl_user?.id != userInfo.userID
+				) {
+					return {
+						userErrors: [
+							{
+								message: 'Not Authorized to delete teacher',
+							},
+						],
+						teacher: null,
 					}
 				}
 			}

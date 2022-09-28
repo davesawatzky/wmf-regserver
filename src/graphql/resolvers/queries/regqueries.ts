@@ -89,7 +89,7 @@ export const Registration = {
 	},
 	school: ({ id }: tbl_registration, _: any, { db, userInfo }: Context) => {
 		if (!userInfo) return null
-		return db.tbl_reg_school.findMany({
+		return db.tbl_reg_school.findUnique({
 			where: { regID: id },
 		})
 	},

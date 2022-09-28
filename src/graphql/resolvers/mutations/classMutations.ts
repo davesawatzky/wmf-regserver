@@ -44,7 +44,7 @@ export const RegisteredClassMutations = {
 		if (!userInfo.admin && !userInfo.staff) {
 			let idCheck = await db.tbl_registration.findUnique({
 				where: {
-					id: Number(registrationID),
+					id: +registrationID,
 				},
 				select: {
 					id: true,
@@ -71,12 +71,12 @@ export const RegisteredClassMutations = {
 		 */
 		let classExists = await db.tbl_reg_classes.findMany({
 			where: {
-				regID: registeredClass.regID,
+				regID: +registrationID,
 				classNumber: registeredClass.classNumber,
 			},
 		})
 
-		if (classExists.length > 0) {
+		if (classExists.length > 0 && registeredClass.classNumber) {
 			return {
 				userErrors: [
 					{
@@ -123,7 +123,7 @@ export const RegisteredClassMutations = {
 			let classEntryExists: tbl_reg_classes | null =
 				await db.tbl_reg_classes.findUnique({
 					where: {
-						id: Number(registeredClassID),
+						id: +registeredClassID,
 					},
 				})
 			if (!classEntryExists) {
@@ -136,30 +136,25 @@ export const RegisteredClassMutations = {
 					registeredClass: null,
 				}
 			} else {
-				let idCheck = await db.tbl_user.findMany({
+				let idCheck = await db.tbl_reg_classes.findMany({
+					where: {
+						id: +registeredClassID,
+					},
 					select: {
 						id: true,
 						tbl_registration: {
 							select: {
-								id: true,
-								tbl_reg_classes: {
-									select: {
-										id: true,
-									},
-									where: {
-										id: registeredClassID,
-									},
+								tbl_user: {
+									select: { id: true },
 								},
 							},
 						},
 					},
 				})
-				console.log(registeredClassID)
 
 				if (
 					!idCheck ||
-					idCheck.length > 1 ||
-					idCheck[0].id != userInfo.userID
+					idCheck[0].tbl_registration.tbl_user?.id != userInfo.userID
 				) {
 					return {
 						userErrors: [
@@ -172,7 +167,6 @@ export const RegisteredClassMutations = {
 				}
 			}
 		}
-
 		return {
 			userErrors: [],
 			registeredClass: await db.tbl_reg_classes.update({
@@ -180,7 +174,7 @@ export const RegisteredClassMutations = {
 					...registeredClass,
 				},
 				where: {
-					id: Number(registeredClassID),
+					id: +registeredClassID,
 				},
 			}),
 		}
@@ -188,7 +182,7 @@ export const RegisteredClassMutations = {
 
 	registeredClassDelete: async (
 		_: any,
-		{ id }: tbl_reg_classes,
+		{ registeredClassID }: { registeredClassID: tbl_reg_classes['id'] },
 		{ db, userInfo }: Context
 	): Promise<RegisteredClassPayloadType> => {
 		if (!userInfo) {
@@ -206,7 +200,7 @@ export const RegisteredClassMutations = {
 			let classEntryExists: tbl_reg_classes | null =
 				await db.tbl_reg_classes.findUnique({
 					where: {
-						id: Number(id),
+						id: +registeredClassID,
 					},
 				})
 			if (!classEntryExists) {
@@ -219,19 +213,16 @@ export const RegisteredClassMutations = {
 					registeredClass: null,
 				}
 			} else {
-				let idCheck = await db.tbl_user.findMany({
+				let idCheck = await db.tbl_reg_classes.findMany({
+					where: {
+						id: +registeredClassID,
+					},
 					select: {
 						id: true,
 						tbl_registration: {
 							select: {
-								id: true,
-								tbl_reg_classes: {
-									select: {
-										id: true,
-									},
-									where: {
-										id,
-									},
+								tbl_user: {
+									select: { id: true },
 								},
 							},
 						},
@@ -240,8 +231,7 @@ export const RegisteredClassMutations = {
 
 				if (
 					!idCheck ||
-					idCheck.length > 1 ||
-					idCheck[0].id != userInfo.userID
+					idCheck[0].tbl_registration.tbl_user?.id != userInfo.userID
 				) {
 					return {
 						userErrors: [
@@ -258,7 +248,7 @@ export const RegisteredClassMutations = {
 			userErrors: [],
 			registeredClass: await db.tbl_reg_classes.delete({
 				where: {
-					id: Number(id),
+					id: +registeredClassID,
 				},
 			}),
 		}

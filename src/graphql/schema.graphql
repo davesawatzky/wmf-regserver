@@ -19,14 +19,17 @@ type Query {
 	categories(levelID: ID, subdisciplineID: ID): [Category!]!
 	category(id: ID!): Category!
 	categoriesByName(name: String!): [Category!]!
+	communities: [Community!]!
+	community(id: ID!): Community!
 	disciplines: [Discipline!]!
 	discipline(id: ID!): Discipline!
 	disciplinesByName(name: String!): [Discipline!]!
+	disciplinesByType(SGSlabel: SGSlabel!): [Discipline!]!
 	levels(subdisciplineID: ID): [Level!]!
 	level(id: ID!): Level!
 	levelsByName(name: String!): [Level!]
 	performers: [Performer!]!
-	performer(id: ID): Performer!
+	performer(id: ID!): Performer!
 	groups: [Group!]!
 	group(id: ID!): Group!
 	registrations: [Registration!]!
@@ -143,21 +146,17 @@ type ClassTrophy {
 type Community {
 	id: ID!
 	name: String!
-	address: String
-	city: String
-	province: String
-	postalCode: String
-	email: String
-	phone: String
+	conflictPerformers: String
+	groupSize: Int
+	chaperones: Int
+	wheelchairs: Int
 }
 input CommunityInput {
 	name: String
-	address: String
-	city: String
-	province: String
-	postalCode: String
-	email: String
-	phone: String
+	conflictPerformers: String
+	groupSize: Int
+	chaperones: Int
+	wheelchairs: Int
 }
 
 input CredentialsInput {
@@ -178,12 +177,6 @@ type Group {
 	numberOfPerformers: Int
 	age: Int
 	instruments: String
-	performerInOtherClasses: String
-	numberOfChaperones: Int
-	numberOfWheelchairs: Int
-	earliestPerformingTime: String
-	latestPerformingTime: String
-	unavailable: [Unavailable]
 }
 
 input GroupInput {
@@ -192,11 +185,6 @@ input GroupInput {
 	numberOfPerformers: Int
 	age: Int
 	instruments: String
-	performerInOtherClasses: String
-	numberOfChaperones: Int
-	numberOfWheelchairs: Int
-	earliestPerformingTime: String
-	latestPerformingTime: String
 }
 
 type Level {
@@ -211,7 +199,9 @@ type Performer {
 	id: ID!
 	firstName: String
 	lastName: String
-	address: String
+	apartment: String
+	streetNumber: String
+	streetName: String
 	city: String
 	province: String
 	postalCode: String
@@ -220,13 +210,15 @@ type Performer {
 	age: Int
 	otherClasses: String
 	instrument: String
-	level: Int
+	level: String
 }
 
 input PerformerInput {
 	firstName: String
 	lastName: String
-	address: String
+	apartment: String
+	streetNumber: String
+	streetName: String
 	city: String!
 	province: String!
 	postalCode: String
@@ -235,7 +227,7 @@ input PerformerInput {
 	age: Int
 	otherClasses: String
 	instrument: String
-	level: Int
+	level: String
 }
 
 type Registration {
@@ -287,6 +279,44 @@ input RegisteredClassInput {
 	numberOfSelections: Int
 }
 
+type Sacred {
+	id: ID!
+	composer: String!
+	largeWork: String
+	title: String!
+}
+
+type School {
+	id: ID!
+	name: String!
+	division: String
+	streetNumber: String
+	streetName: String
+	city: String
+	province: String
+	postalCode: String
+	phone: String
+	earliestTime: String
+	latestTime: String
+	unavailable: String
+	conflictStudents: String
+}
+
+input SchoolInput {
+	name: String
+	division: String
+	streetNumber: String
+	streetName: String
+	city: String
+	province: String
+	postalCode: String
+	phone: String
+	earliestTime: String
+	latestTime: String
+	unavailable: String
+	conflictStudents: String
+}
+
 type Selection {
 	id: ID!
 	title: String!
@@ -302,34 +332,6 @@ input SelectionInput {
 	movement: String
 	composer: String
 	duration: String
-}
-
-type Sacred {
-	id: ID!
-	composer: String!
-	largeWork: String
-	title: String!
-}
-
-type School {
-	id: ID!
-	name: String!
-	division: String
-	address: String
-	city: String
-	province: String
-	postalCode: String
-	phone: String
-}
-
-input SchoolInput {
-	name: String
-	division: String
-	address: String
-	city: String
-	province: String
-	postalCode: String
-	phone: String
 }
 
 type Subdiscipline {
@@ -349,7 +351,9 @@ type Teacher {
 	prefix: String
 	firstName: String
 	lastName: String
-	address: String
+	apartment: String
+	streetNumber: String
+	streetName: String
 	city: String
 	province: String
 	postalCode: String
@@ -361,7 +365,9 @@ input TeacherInput {
 	prefix: String
 	firstName: String
 	lastName: String
-	address: String
+	apartment: String
+	streetNumber: String
+	streetName: String
 	city: String!
 	province: String!
 	postalCode: String

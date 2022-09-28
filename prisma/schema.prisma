@@ -61,7 +61,7 @@ model tbl_level {
 model tbl_reg_classes {
   id                 Int                 @id @default(autoincrement())
   regID              Int
-  classNumber        String              @db.VarChar(9)
+  classNumber        String?             @db.VarChar(9)
   discipline         String?             @db.VarChar(30)
   subdiscipline      String?             @db.VarChar(30)
   level              String?             @db.VarChar(30)
@@ -76,22 +76,17 @@ model tbl_reg_classes {
 }
 
 model tbl_reg_group {
-  id                      Int                   @id @default(autoincrement())
-  regID                   Int
-  name                    String                @db.VarChar(50)
-  groupType               String                @db.VarChar(15)
-  numberOfPerformers      Int?                  @db.TinyInt
-  age                     Int?                  @db.TinyInt
-  instruments             String?               @db.VarChar(200)
-  performerInOtherClasses String?               @db.VarChar(300)
-  numberOfChaperones      Int?                  @db.TinyInt
-  numberOfWheelchairs     Int?                  @db.TinyInt
-  earliestPerformingTime  DateTime?             @db.Time(0)
-  latestPerformingTime    DateTime?             @db.Time(0)
-  createdAt               DateTime              @default(now()) @db.DateTime(0)
-  updatedAt               DateTime              @default(now()) @updatedAt @db.DateTime(0)
-  tbl_registration        tbl_registration      @relation(fields: [regID], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "group_registration")
-  tbl_reg_unavailable     tbl_reg_unavailable[]
+  id                  Int                   @id @default(autoincrement())
+  regID               Int
+  name                String                @db.VarChar(50)
+  groupType           String                @db.VarChar(15)
+  numberOfPerformers  Int?                  @db.TinyInt
+  age                 Int?                  @db.TinyInt
+  instruments         String?               @db.VarChar(200)
+  createdAt           DateTime              @default(now()) @db.DateTime(0)
+  updatedAt           DateTime              @default(now()) @updatedAt @db.DateTime(0)
+  tbl_registration    tbl_registration      @relation(fields: [regID], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "group_registration")
+  tbl_reg_unavailable tbl_reg_unavailable[]
 
   @@index([regID], map: "group_registration")
 }
@@ -101,14 +96,16 @@ model tbl_reg_performer {
   regID            Int
   lastName         String?          @db.VarChar(30)
   firstName        String?          @db.VarChar(30)
-  address          String?          @db.VarChar(100)
+  apartment        String?          @db.VarChar(5)
+  streetNumber     String?          @db.VarChar(6)
+  streetName       String?          @db.VarChar(100)
   city             String           @default("Winnipeg") @db.VarChar(30)
   province         String           @default("MB") @db.VarChar(30)
   postalCode       String?          @db.VarChar(7)
   phone            String?          @db.VarChar(14)
   email            String?          @db.VarChar(50)
   age              Int?             @db.TinyInt
-  instrument       String?          @db.VarChar(20)
+  instrument       String?          @db.VarChar(50)
   level            String?          @db.VarChar(20)
   otherClasses     String?          @db.VarChar(255)
   createdAt        DateTime         @default(now()) @db.DateTime(0)
@@ -121,13 +118,18 @@ model tbl_reg_performer {
 model tbl_reg_school {
   id               Int              @id @default(autoincrement())
   regID            Int              @unique(map: "school_constraint")
-  name             String           @db.VarChar(50)
+  name             String           @default("") @db.VarChar(50)
   division         String?          @db.VarChar(50)
-  address          String?          @db.VarChar(100)
-  city             String?          @db.VarChar(30)
-  province         String?          @db.VarChar(30)
+  streetNumber     String?          @db.VarChar(6)
+  streetName       String?          @db.VarChar(100)
+  city             String           @default("Winnipeg") @db.VarChar(30)
+  province         String           @default("MB") @db.VarChar(30)
   postalCode       String?          @db.VarChar(6)
   phone            String?          @db.VarChar(14)
+  earliestTime     String?          @db.VarChar(20)
+  latestTime       String?          @db.VarChar(20)
+  unavailable      String?          @db.Text
+  conflictStudents String?          @db.Text
   createdAt        DateTime         @default(now()) @db.DateTime(0)
   updatedAt        DateTime         @default(now()) @updatedAt @db.DateTime(0)
   tbl_registration tbl_registration @relation(fields: [regID], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "school_registration")
@@ -156,7 +158,9 @@ model tbl_reg_teacher {
   prefix           String?          @db.VarChar(5)
   lastName         String?          @db.VarChar(30)
   firstName        String?          @db.VarChar(30)
-  address          String?          @db.VarChar(100)
+  apartment        String?          @db.VarChar(5)
+  streetNumber     String?          @db.VarChar(6)
+  streetName       String?          @db.VarChar(100)
   city             String           @default("Winnipeg") @db.VarChar(30)
   province         String           @default("MB") @db.VarChar(30)
   postalCode       String?          @db.VarChar(7)
@@ -244,18 +248,16 @@ model tbl_user {
 }
 
 model tbl_reg_community {
-  id               Int              @id @default(autoincrement())
-  regID            Int              @unique(map: "school_constraint")
-  name             String           @db.VarChar(50)
-  address          String?          @db.VarChar(100)
-  city             String?          @db.VarChar(30)
-  province         String?          @db.VarChar(30)
-  postalCode       String?          @db.VarChar(6)
-  phone            String?          @db.VarChar(14)
-  email            String?          @db.VarChar(50)
-  createdAt        DateTime         @default(now()) @db.DateTime(0)
-  updatedAt        DateTime         @default(now()) @db.DateTime(0)
-  tbl_registration tbl_registration @relation(fields: [regID], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "tbl_reg_community_ibfk_1")
+  id                 Int              @id @default(autoincrement())
+  regID              Int              @unique(map: "school_constraint")
+  name               String           @db.VarChar(50)
+  conflictPerformers String?          @db.Text
+  groupSize          Int?
+  chaperones         Int?
+  wheelchairs        Int?
+  createdAt          DateTime         @default(now()) @db.DateTime(0)
+  updatedAt          DateTime         @default(now()) @db.DateTime(0)
+  tbl_registration   tbl_registration @relation(fields: [regID], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "tbl_reg_community_ibfk_1")
 
   @@index([regID], map: "school_registration")
 }

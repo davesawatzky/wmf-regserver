@@ -54,7 +54,6 @@ export const SelectionMutations = {
 					},
 				},
 			})
-			console.log(idCheck, userInfo)
 
 			if (idCheck[0].id != userInfo.userID) {
 				return {
@@ -116,22 +115,18 @@ export const SelectionMutations = {
 					selection: null,
 				}
 			} else {
-				let idCheck = await db.tbl_user.findMany({
+				let idCheck = await db.tbl_reg_selection.findMany({
+					where: {
+						id: +selectionID,
+					},
 					select: {
 						id: true,
-						tbl_registration: {
+						tbl_reg_classes: {
 							select: {
-								id: true,
-								tbl_reg_classes: {
+								tbl_registration: {
 									select: {
-										id: true,
-										tbl_reg_selection: {
-											select: {
-												id: true,
-											},
-											where: {
-												id: selectionID,
-											},
+										tbl_user: {
+											select: { id: true },
 										},
 									},
 								},
@@ -142,8 +137,8 @@ export const SelectionMutations = {
 
 				if (
 					!idCheck ||
-					idCheck.length > 1 ||
-					idCheck[0].id != userInfo.userID
+					idCheck[0].tbl_reg_classes.tbl_registration.tbl_user?.id !=
+						userInfo.userID
 				) {
 					return {
 						userErrors: [
@@ -172,7 +167,7 @@ export const SelectionMutations = {
 
 	selectionDelete: async (
 		_: any,
-		{ id }: tbl_reg_selection,
+		{ selectionID }: { selectionID: tbl_reg_selection['id'] },
 		{ db, userInfo }: Context
 	): Promise<SelectionPayloadType> => {
 		if (!userInfo) {
@@ -190,7 +185,7 @@ export const SelectionMutations = {
 			let selectionExists: tbl_reg_selection | null =
 				await db.tbl_reg_selection.findUnique({
 					where: {
-						id: Number(id),
+						id: +selectionID,
 					},
 				})
 			if (!selectionExists) {
@@ -203,22 +198,18 @@ export const SelectionMutations = {
 					selection: null,
 				}
 			} else {
-				let idCheck = await db.tbl_user.findMany({
+				let idCheck = await db.tbl_reg_selection.findMany({
+					where: {
+						id: +selectionID,
+					},
 					select: {
 						id: true,
-						tbl_registration: {
+						tbl_reg_classes: {
 							select: {
-								id: true,
-								tbl_reg_classes: {
+								tbl_registration: {
 									select: {
-										id: true,
-										tbl_reg_selection: {
-											select: {
-												id: true,
-											},
-											where: {
-												id,
-											},
+										tbl_user: {
+											select: { id: true },
 										},
 									},
 								},
@@ -229,8 +220,8 @@ export const SelectionMutations = {
 
 				if (
 					!idCheck ||
-					idCheck.length > 1 ||
-					idCheck[0].id != userInfo.userID
+					idCheck[0].tbl_reg_classes.tbl_registration.tbl_user?.id !=
+						userInfo.userID
 				) {
 					return {
 						userErrors: [
@@ -247,7 +238,7 @@ export const SelectionMutations = {
 			userErrors: [],
 			selection: await db.tbl_reg_selection.delete({
 				where: {
-					id: Number(id),
+					id: Number(selectionID),
 				},
 			}),
 		}

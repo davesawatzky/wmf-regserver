@@ -132,7 +132,7 @@ export const RegistrationMutations = {
 		}
 		const error = await canUserMutateInfo({
 			userID: userInfo.userID,
-			registrationID: Number(id),
+			registrationID: +id,
 			db,
 		})
 
@@ -140,7 +140,7 @@ export const RegistrationMutations = {
 
 		const registration = await db.tbl_registration.findUnique({
 			where: {
-				id: Number(id),
+				id: +id,
 			},
 		})
 		if (!registration) {
@@ -155,7 +155,7 @@ export const RegistrationMutations = {
 		}
 		await db.tbl_registration.delete({
 			where: {
-				id: registration.id,
+				id: +registration.id,
 			},
 		})
 		return {
