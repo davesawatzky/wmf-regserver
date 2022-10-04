@@ -50,7 +50,7 @@ export const CommunityMutations = {
 		if (!userInfo.admin && !userInfo.staff) {
 			let idCheck = await db.tbl_registration.findUnique({
 				where: {
-					id: Number(registrationID),
+					id: +registrationID,
 				},
 				select: {
 					id: true,
@@ -72,7 +72,10 @@ export const CommunityMutations = {
 						community: null,
 					}
 				}
-				if (idCheck.performerType != 'COMMUNITY') {
+				if (
+					idCheck.performerType != 'COMMUNITY' &&
+					idCheck.performerType != 'SCHOOL'
+				) {
 					return {
 						userErrors: [
 							{
@@ -87,13 +90,13 @@ export const CommunityMutations = {
 			 * Check to see if there is already one community listed if
 			 * performerType is set to 'SCHOOL'
 			 */
-			let communityExists = await db.tbl_reg_community.findUnique({
+			let communityExists = await db.tbl_reg_community.findMany({
 				where: {
-					regID: Number(registrationID),
+					regID: +registrationID,
 				},
 			})
 
-			if (communityExists) {
+			if (communityExists && idCheck?.performerType === 'COMMUNITY') {
 				return {
 					userErrors: [
 						{

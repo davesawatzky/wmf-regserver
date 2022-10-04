@@ -36,6 +36,8 @@ type Query {
 	registration(id: ID!): Registration!
 	sacredTitles: [Sacred!]!
 	sacredTitle(id: ID!): Sacred!
+	schools: [School!]!
+	school(id: ID!, name: String): School!
 	subdisciplines(disciplineID: ID): [Subdiscipline!]!
 	subdiscipline(id: ID!): Subdiscipline!
 	subdisciplinesByName(name: String!): [Subdiscipline!]!
@@ -43,7 +45,7 @@ type Query {
 	trophies: [Trophy!]!
 	trophy(id: ID!): Trophy!
 	users: [User!]!
-	user(id: ID!): User!
+	user(id: ID!, firstName: String, lastName: String, phone: String): User!
 }
 
 type Mutation {
@@ -111,6 +113,9 @@ type Mutation {
 	teacherCreate(registrationID: ID!, teacher: TeacherInput!): TeacherPayload!
 	teacherUpdate(teacherID: ID!, teacher: TeacherInput!): TeacherPayload!
 	teacherDelete(teacherID: ID!): TeacherPayload!
+
+	userUpdate(userID: ID!, user: UserInput!): UserPayload!
+	userDelete(userID: ID!): UserPayload!
 }
 
 type Category {
@@ -150,6 +155,9 @@ type Community {
 	groupSize: Int
 	chaperones: Int
 	wheelchairs: Int
+	earliestTime: String
+	latestTime: String
+	unavailable: String
 }
 input CommunityInput {
 	name: String
@@ -157,6 +165,9 @@ input CommunityInput {
 	groupSize: Int
 	chaperones: Int
 	wheelchairs: Int
+	earliestTime: String
+	latestTime: String
+	unavailable: String
 }
 
 input CredentialsInput {
@@ -268,6 +279,7 @@ type RegisteredClass {
 	level: String
 	category: String
 	numberOfSelections: Int
+	price: Float
 }
 
 input RegisteredClassInput {
@@ -277,6 +289,7 @@ input RegisteredClassInput {
 	level: String
 	category: String
 	numberOfSelections: Int
+	price: Float
 }
 
 type Sacred {
@@ -296,10 +309,7 @@ type School {
 	province: String
 	postalCode: String
 	phone: String
-	earliestTime: String
-	latestTime: String
-	unavailable: String
-	conflictStudents: String
+	schoolGroups: [Community]
 }
 
 input SchoolInput {
@@ -311,10 +321,6 @@ input SchoolInput {
 	province: String
 	postalCode: String
 	phone: String
-	earliestTime: String
-	latestTime: String
-	unavailable: String
-	conflictStudents: String
 }
 
 type Selection {
@@ -342,6 +348,7 @@ type Subdiscipline {
 	maxPerformers: Int
 	minPerformers: Int!
 	SGSlabel: SGSlabel!
+	price: Float!
 	levels(levelID: ID): [Level]
 	classes: [Classlist!]!
 }
@@ -390,10 +397,33 @@ type Unavailable {
 
 type User {
 	id: ID!
-	email: EmailAddress!
+	email: String
 	staff: Boolean
 	admin: Boolean
+	firstName: String
+	lastName: String
+	apartment: String
+	streetNumber: String
+	streetName: String
+	city: String
+	province: String
+	postalCode: String
+	phone: String
 	registrations: [Registration!]!
+}
+
+input UserInput {
+	staff: Boolean
+	admin: Boolean
+	firstName: String
+	lastName: String
+	apartment: String
+	streetNumber: String
+	streetName: String
+	city: String
+	province: String
+	postalCode: String
+	phone: String
 }
 
 type AuthPayload {
@@ -437,6 +467,11 @@ type SelectionPayload {
 type TeacherPayload {
 	userErrors: [UserError!]!
 	teacher: Teacher
+}
+
+type UserPayload {
+	userErrors: [UserError!]!
+	user: User
 }
 
 type UserError {

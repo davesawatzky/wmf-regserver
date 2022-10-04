@@ -2,6 +2,7 @@ import {
 	tbl_registration,
 	tbl_reg_classes,
 	tbl_reg_performer,
+	tbl_reg_school,
 	tbl_user,
 } from '@prisma/client'
 import { Context } from '../../../server'
@@ -106,6 +107,17 @@ export const RegisteredClass = {
 		if (!userInfo) return null
 		return db.tbl_reg_selection.findMany({
 			where: { classpickID: id },
+		})
+	},
+}
+
+export const School = {
+	schoolGroups: ({ id }: tbl_reg_school, _: any, { db, userInfo }: Context) => {
+		if (!userInfo) return null
+		return db.tbl_reg_community.findMany({
+			where: {
+				regID: id,
+			},
 		})
 	},
 }
