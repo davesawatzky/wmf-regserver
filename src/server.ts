@@ -7,7 +7,7 @@ import { Prisma } from '@prisma/client'
 import { PrismaClient } from '@prisma/client'
 import express from 'express'
 import http from 'http'
-import cors from 'cors'
+// import cors from 'cors'
 import { Query, Mutation, OtherQueries } from './graphql'
 import { getUserFromToken } from './utils/getUserFromToken'
 
@@ -42,15 +42,15 @@ async function startApolloServer() {
 	const app = express()
 	app
 		.use(express.json())
-		.use(cors())
+		// .use(cors())
 		.use(express.urlencoded({ extended: true }))
 		.disable('x-powered-by')
 
 	const httpServer = http.createServer(app)
-	const corsOptions = {
-		origin: ['https://wmf.diatonic.ca', 'https://studio.apollographql.com'],
-		credentials: true,
-	}
+	// const corsOptions = {
+	// 	origin: ['https://wmf.diatonic.ca', 'https://studio.apollographql.com'],
+	// 	credentials: true,
+	// }
 	const apolloServer = new ApolloServer({
 		typeDefs,
 		resolvers,
@@ -66,7 +66,7 @@ async function startApolloServer() {
 		plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
 	})
 	await apolloServer.start()
-	apolloServer.applyMiddleware({ app, path: '/graphql', cors: corsOptions })
+	apolloServer.applyMiddleware({ app, path: '/graphql' }) //, cors: corsOptions })
 	await httpServer.listen(PORT, () => {
 		console.log(`Server is running on port ${PORT}.`)
 	})
