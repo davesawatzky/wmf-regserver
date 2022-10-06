@@ -280,6 +280,7 @@ type RegisteredClass {
 	category: String
 	numberOfSelections: Int
 	price: Float
+	schoolCommunityId: Int
 }
 
 input RegisteredClassInput {
@@ -290,6 +291,7 @@ input RegisteredClassInput {
 	category: String
 	numberOfSelections: Int
 	price: Float
+	schoolCommunityId: Int
 }
 
 type Sacred {

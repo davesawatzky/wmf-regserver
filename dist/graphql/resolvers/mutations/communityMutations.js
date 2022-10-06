@@ -47,32 +47,31 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PerformerMutations = void 0;
-exports.PerformerMutations = {
-    performerCreate: function (_, _a, _b) {
-        var registrationID = _a.registrationID, performer = _a.performer;
+exports.CommunityMutations = void 0;
+exports.CommunityMutations = {
+    communityCreate: function (_, _a, _b) {
+        var registrationID = _a.registrationID, community = _a.community;
         var db = _b.db, userInfo = _b.userInfo;
         return __awaiter(void 0, void 0, void 0, function () {
-            var idCheck, numberOfPerformers;
+            var idCheck, communityExists;
             var _c;
-            var _d;
-            return __generator(this, function (_e) {
-                switch (_e.label) {
+            return __generator(this, function (_d) {
+                switch (_d.label) {
                     case 0:
                         if (!userInfo) {
                             return [2, {
                                     userErrors: [
                                         {
-                                            message: 'You must be logged in to add a performer',
+                                            message: 'You must be logged in to add a community group',
                                         },
                                     ],
-                                    performer: null,
+                                    community: null,
                                 }];
                         }
                         if (!(!userInfo.admin && !userInfo.staff)) return [3, 3];
                         return [4, db.tbl_registration.findUnique({
                                 where: {
-                                    id: Number(registrationID),
+                                    id: +registrationID,
                                 },
                                 select: {
                                     id: true,
@@ -83,93 +82,102 @@ exports.PerformerMutations = {
                                 },
                             })];
                     case 1:
-                        idCheck = _e.sent();
-                        if (((_d = idCheck === null || idCheck === void 0 ? void 0 : idCheck.tbl_user) === null || _d === void 0 ? void 0 : _d.id) != userInfo.userID) {
-                            return [2, {
-                                    userErrors: [
-                                        {
-                                            message: 'Not Authorized to create performer',
-                                        },
-                                    ],
-                                    performer: null,
-                                }];
+                        idCheck = _d.sent();
+                        if (idCheck === null || idCheck === void 0 ? void 0 : idCheck.tbl_user) {
+                            if (idCheck.tbl_user.id != userInfo.userID) {
+                                return [2, {
+                                        userErrors: [
+                                            {
+                                                message: 'Not Authorized to create entry',
+                                            },
+                                        ],
+                                        community: null,
+                                    }];
+                            }
+                            if (idCheck.performerType != 'COMMUNITY' &&
+                                idCheck.performerType != 'SCHOOL') {
+                                return [2, {
+                                        userErrors: [
+                                            {
+                                                message: "Cannot add community group to ".concat(idCheck.performerType, " registration form."),
+                                            },
+                                        ],
+                                        community: null,
+                                    }];
+                            }
                         }
-                        return [4, db.tbl_registration.findMany({
+                        return [4, db.tbl_reg_community.findMany({
                                 where: {
-                                    id: Number(registrationID),
-                                    tbl_reg_performer: {
-                                        some: {},
-                                    },
+                                    regID: +registrationID,
                                 },
                             })];
                     case 2:
-                        numberOfPerformers = _e.sent();
-                        if (numberOfPerformers[0] &&
-                            numberOfPerformers[0].performerType == 'SOLO') {
+                        communityExists = _d.sent();
+                        if (communityExists && (idCheck === null || idCheck === void 0 ? void 0 : idCheck.performerType) === 'COMMUNITY') {
                             return [2, {
                                     userErrors: [
                                         {
-                                            message: 'Solo Registration already has a performer listed.  Cannot add another performer.',
+                                            message: 'Community Registration form already has a community group listed.  Cannot add another community group.',
                                         },
                                     ],
-                                    performer: null,
+                                    community: null,
                                 }];
                         }
-                        _e.label = 3;
+                        _d.label = 3;
                     case 3:
-                        performer.regID = Number(registrationID);
+                        community.regID = Number(registrationID);
                         _c = {
                             userErrors: []
                         };
-                        return [4, db.tbl_reg_performer.create({
-                                data: __assign({}, performer),
+                        return [4, db.tbl_reg_community.create({
+                                data: __assign({}, community),
                             })];
-                    case 4: return [2, (_c.performer = _e.sent(),
+                    case 4: return [2, (_c.community = _d.sent(),
                             _c)];
                 }
             });
         });
     },
-    performerUpdate: function (_, _a, _b) {
-        var performerID = _a.performerID, performer = _a.performer;
+    communityUpdate: function (_, _a, _b) {
+        var communityID = _a.communityID, community = _a.community;
         var db = _b.db, userInfo = _b.userInfo;
         return __awaiter(void 0, void 0, void 0, function () {
-            var performerExists, idCheck;
+            var communityExists, idCheck;
             var _c;
-            var _d, _e;
-            return __generator(this, function (_f) {
-                switch (_f.label) {
+            var _d;
+            return __generator(this, function (_e) {
+                switch (_e.label) {
                     case 0:
                         if (!userInfo) {
                             return [2, {
                                     userErrors: [
                                         {
-                                            message: 'You must be logged in to update a performer',
+                                            message: 'You must be logged in to update a community group.',
                                         },
                                     ],
-                                    performer: null,
+                                    community: null,
                                 }];
                         }
                         if (!(!userInfo.admin && !userInfo.staff)) return [3, 4];
-                        return [4, db.tbl_reg_performer.findUnique({
+                        return [4, db.tbl_reg_community.findUnique({
                                 where: {
-                                    id: +performerID,
+                                    id: Number(communityID),
                                 },
                             })];
                     case 1:
-                        performerExists = _f.sent();
-                        if (!!performerExists) return [3, 2];
+                        communityExists = _e.sent();
+                        if (!!communityExists) return [3, 2];
                         return [2, {
                                 userErrors: [
                                     {
-                                        message: 'Performer does not exist in registration form.',
+                                        message: 'Community group does not exist in registration form.',
                                     },
                                 ],
-                                performer: null,
+                                community: null,
                             }];
-                    case 2: return [4, db.tbl_reg_performer.findUnique({
+                    case 2: return [4, db.tbl_reg_community.findUnique({
                             where: {
-                                id: +performerID,
+                                id: Number(communityID),
                             },
                             select: {
                                 id: true,
@@ -183,74 +191,76 @@ exports.PerformerMutations = {
                             },
                         })];
                     case 3:
-                        idCheck = _f.sent();
-                        if (((_e = (_d = idCheck === null || idCheck === void 0 ? void 0 : idCheck.tbl_registration) === null || _d === void 0 ? void 0 : _d.tbl_user) === null || _e === void 0 ? void 0 : _e.id) != userInfo.userID) {
-                            return [2, {
-                                    userErrors: [
-                                        {
-                                            message: 'Not Authorized to update performer',
-                                        },
-                                    ],
-                                    performer: null,
-                                }];
+                        idCheck = _e.sent();
+                        if (idCheck === null || idCheck === void 0 ? void 0 : idCheck.tbl_registration.tbl_user) {
+                            if (((_d = idCheck === null || idCheck === void 0 ? void 0 : idCheck.tbl_registration) === null || _d === void 0 ? void 0 : _d.tbl_user.id) != userInfo.userID) {
+                                return [2, {
+                                        userErrors: [
+                                            {
+                                                message: 'Not Authorized to update community group.',
+                                            },
+                                        ],
+                                        community: null,
+                                    }];
+                            }
                         }
-                        _f.label = 4;
+                        _e.label = 4;
                     case 4:
                         _c = {
                             userErrors: []
                         };
-                        return [4, db.tbl_reg_performer.update({
-                                data: __assign({}, performer),
+                        return [4, db.tbl_reg_community.update({
+                                data: __assign({}, community),
                                 where: {
-                                    id: +performerID,
+                                    id: Number(communityID),
                                 },
                             })];
-                    case 5: return [2, (_c.performer = _f.sent(),
+                    case 5: return [2, (_c.community = _e.sent(),
                             _c)];
                 }
             });
         });
     },
-    performerDelete: function (_, _a, _b) {
-        var performerID = _a.performerID;
+    communityDelete: function (_, _a, _b) {
+        var communityID = _a.communityID;
         var db = _b.db, userInfo = _b.userInfo;
         return __awaiter(void 0, void 0, void 0, function () {
-            var performerExists, idCheck;
+            var communityExists, idCheck;
             var _c;
-            var _d, _e;
-            return __generator(this, function (_f) {
-                switch (_f.label) {
+            var _d;
+            return __generator(this, function (_e) {
+                switch (_e.label) {
                     case 0:
                         if (!userInfo) {
                             return [2, {
                                     userErrors: [
                                         {
-                                            message: 'You must be logged in to delete a performer',
+                                            message: 'You must be logged in to delete a community group.',
                                         },
                                     ],
-                                    performer: null,
+                                    community: null,
                                 }];
                         }
                         if (!(!userInfo.admin && !userInfo.staff)) return [3, 4];
-                        return [4, db.tbl_reg_performer.findUnique({
+                        return [4, db.tbl_reg_community.findUnique({
                                 where: {
-                                    id: +performerID,
+                                    id: Number(communityID),
                                 },
                             })];
                     case 1:
-                        performerExists = _f.sent();
-                        if (!!performerExists) return [3, 2];
+                        communityExists = _e.sent();
+                        if (!!communityExists) return [3, 2];
                         return [2, {
                                 userErrors: [
                                     {
-                                        message: 'Performer does not exist in registration form.',
+                                        message: 'Community group does not exist in registration form.',
                                     },
                                 ],
-                                performer: null,
+                                community: null,
                             }];
-                    case 2: return [4, db.tbl_reg_performer.findUnique({
+                    case 2: return [4, db.tbl_reg_community.findUnique({
                             where: {
-                                id: +performerID,
+                                id: Number(communityID),
                             },
                             select: {
                                 id: true,
@@ -264,32 +274,34 @@ exports.PerformerMutations = {
                             },
                         })];
                     case 3:
-                        idCheck = _f.sent();
-                        if (((_e = (_d = idCheck === null || idCheck === void 0 ? void 0 : idCheck.tbl_registration) === null || _d === void 0 ? void 0 : _d.tbl_user) === null || _e === void 0 ? void 0 : _e.id) != userInfo.userID) {
-                            return [2, {
-                                    userErrors: [
-                                        {
-                                            message: 'Not Authorized to delete performer',
-                                        },
-                                    ],
-                                    performer: null,
-                                }];
+                        idCheck = _e.sent();
+                        if (idCheck === null || idCheck === void 0 ? void 0 : idCheck.tbl_registration.tbl_user) {
+                            if (((_d = idCheck === null || idCheck === void 0 ? void 0 : idCheck.tbl_registration) === null || _d === void 0 ? void 0 : _d.tbl_user.id) != userInfo.userID) {
+                                return [2, {
+                                        userErrors: [
+                                            {
+                                                message: 'Not Authorized to delete community group.',
+                                            },
+                                        ],
+                                        community: null,
+                                    }];
+                            }
                         }
-                        _f.label = 4;
+                        _e.label = 4;
                     case 4:
                         _c = {
                             userErrors: []
                         };
-                        return [4, db.tbl_reg_performer.delete({
+                        return [4, db.tbl_reg_community.delete({
                                 where: {
-                                    id: +performerID,
+                                    id: Number(communityID),
                                 },
                             })];
-                    case 5: return [2, (_c.performer = _f.sent(),
+                    case 5: return [2, (_c.community = _e.sent(),
                             _c)];
                 }
             });
         });
     },
 };
-//# sourceMappingURL=performerMutations.js.map
+//# sourceMappingURL=communityMutations.js.map

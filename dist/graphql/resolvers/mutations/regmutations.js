@@ -54,6 +54,7 @@ var SGSlabel;
     SGSlabel["SOLO"] = "SOLO";
     SGSlabel["GROUP"] = "GROUP";
     SGSlabel["SCHOOL"] = "SCHOOL";
+    SGSlabel["COMMUNITY"] = "COMMUNITY";
 })(SGSlabel || (SGSlabel = {}));
 exports.RegistrationMutations = {
     registrationCreate: function (_, _a, _b) {
@@ -170,7 +171,7 @@ exports.RegistrationMutations = {
                         }
                         return [4, (0, canUserMutateInfo_1.canUserMutateInfo)({
                                 userID: userInfo.userID,
-                                registrationID: Number(id),
+                                registrationID: +id,
                                 db: db,
                             })];
                     case 1:
@@ -179,7 +180,7 @@ exports.RegistrationMutations = {
                             return [2, error];
                         return [4, db.tbl_registration.findUnique({
                                 where: {
-                                    id: Number(id),
+                                    id: +id,
                                 },
                             })];
                     case 2:
@@ -196,7 +197,7 @@ exports.RegistrationMutations = {
                         }
                         return [4, db.tbl_registration.delete({
                                 where: {
-                                    id: registration.id,
+                                    id: +registration.id,
                                 },
                             })];
                     case 3:

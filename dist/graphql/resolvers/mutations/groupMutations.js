@@ -107,7 +107,6 @@ exports.GroupMutations = {
                         _e.label = 2;
                     case 2:
                         group.regID = Number(registrationID);
-                        console.log(group);
                         _c = {
                             userErrors: []
                         };

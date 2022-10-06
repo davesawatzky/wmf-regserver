@@ -89,7 +89,6 @@ exports.SelectionMutations = {
                             })];
                     case 1:
                         idCheck = _d.sent();
-                        console.log(idCheck, userInfo);
                         if (idCheck[0].id != userInfo.userID) {
                             return [2, {
                                     userErrors: [
@@ -121,8 +120,9 @@ exports.SelectionMutations = {
         return __awaiter(void 0, void 0, void 0, function () {
             var selectionExists, idCheck;
             var _c;
-            return __generator(this, function (_d) {
-                switch (_d.label) {
+            var _d;
+            return __generator(this, function (_e) {
+                switch (_e.label) {
                     case 0:
                         if (!userInfo) {
                             return [2, {
@@ -141,7 +141,7 @@ exports.SelectionMutations = {
                                 },
                             })];
                     case 1:
-                        selectionExists = _d.sent();
+                        selectionExists = _e.sent();
                         if (!!selectionExists) return [3, 2];
                         return [2, {
                                 userErrors: [
@@ -151,22 +151,18 @@ exports.SelectionMutations = {
                                 ],
                                 selection: null,
                             }];
-                    case 2: return [4, db.tbl_user.findMany({
+                    case 2: return [4, db.tbl_reg_selection.findMany({
+                            where: {
+                                id: +selectionID,
+                            },
                             select: {
                                 id: true,
-                                tbl_registration: {
+                                tbl_reg_classes: {
                                     select: {
-                                        id: true,
-                                        tbl_reg_classes: {
+                                        tbl_registration: {
                                             select: {
-                                                id: true,
-                                                tbl_reg_selection: {
-                                                    select: {
-                                                        id: true,
-                                                    },
-                                                    where: {
-                                                        id: selectionID,
-                                                    },
+                                                tbl_user: {
+                                                    select: { id: true },
                                                 },
                                             },
                                         },
@@ -175,10 +171,10 @@ exports.SelectionMutations = {
                             },
                         })];
                     case 3:
-                        idCheck = _d.sent();
+                        idCheck = _e.sent();
                         if (!idCheck ||
-                            idCheck.length > 1 ||
-                            idCheck[0].id != userInfo.userID) {
+                            ((_d = idCheck[0].tbl_reg_classes.tbl_registration.tbl_user) === null || _d === void 0 ? void 0 : _d.id) !=
+                                userInfo.userID) {
                             return [2, {
                                     userErrors: [
                                         {
@@ -188,7 +184,7 @@ exports.SelectionMutations = {
                                     selection: null,
                                 }];
                         }
-                        _d.label = 4;
+                        _e.label = 4;
                     case 4:
                         _c = {
                             userErrors: []
@@ -199,20 +195,21 @@ exports.SelectionMutations = {
                                     id: Number(selectionID),
                                 },
                             })];
-                    case 5: return [2, (_c.selection = _d.sent(),
+                    case 5: return [2, (_c.selection = _e.sent(),
                             _c)];
                 }
             });
         });
     },
     selectionDelete: function (_, _a, _b) {
-        var id = _a.id;
+        var selectionID = _a.selectionID;
         var db = _b.db, userInfo = _b.userInfo;
         return __awaiter(void 0, void 0, void 0, function () {
             var selectionExists, idCheck;
             var _c;
-            return __generator(this, function (_d) {
-                switch (_d.label) {
+            var _d;
+            return __generator(this, function (_e) {
+                switch (_e.label) {
                     case 0:
                         if (!userInfo) {
                             return [2, {
@@ -227,11 +224,11 @@ exports.SelectionMutations = {
                         if (!(!userInfo.admin && !userInfo.staff)) return [3, 4];
                         return [4, db.tbl_reg_selection.findUnique({
                                 where: {
-                                    id: Number(id),
+                                    id: +selectionID,
                                 },
                             })];
                     case 1:
-                        selectionExists = _d.sent();
+                        selectionExists = _e.sent();
                         if (!!selectionExists) return [3, 2];
                         return [2, {
                                 userErrors: [
@@ -241,22 +238,18 @@ exports.SelectionMutations = {
                                 ],
                                 selection: null,
                             }];
-                    case 2: return [4, db.tbl_user.findMany({
+                    case 2: return [4, db.tbl_reg_selection.findMany({
+                            where: {
+                                id: +selectionID,
+                            },
                             select: {
                                 id: true,
-                                tbl_registration: {
+                                tbl_reg_classes: {
                                     select: {
-                                        id: true,
-                                        tbl_reg_classes: {
+                                        tbl_registration: {
                                             select: {
-                                                id: true,
-                                                tbl_reg_selection: {
-                                                    select: {
-                                                        id: true,
-                                                    },
-                                                    where: {
-                                                        id: id,
-                                                    },
+                                                tbl_user: {
+                                                    select: { id: true },
                                                 },
                                             },
                                         },
@@ -265,10 +258,10 @@ exports.SelectionMutations = {
                             },
                         })];
                     case 3:
-                        idCheck = _d.sent();
+                        idCheck = _e.sent();
                         if (!idCheck ||
-                            idCheck.length > 1 ||
-                            idCheck[0].id != userInfo.userID) {
+                            ((_d = idCheck[0].tbl_reg_classes.tbl_registration.tbl_user) === null || _d === void 0 ? void 0 : _d.id) !=
+                                userInfo.userID) {
                             return [2, {
                                     userErrors: [
                                         {
@@ -278,17 +271,17 @@ exports.SelectionMutations = {
                                     selection: null,
                                 }];
                         }
-                        _d.label = 4;
+                        _e.label = 4;
                     case 4:
                         _c = {
                             userErrors: []
                         };
                         return [4, db.tbl_reg_selection.delete({
                                 where: {
-                                    id: Number(id),
+                                    id: Number(selectionID),
                                 },
                             })];
-                    case 5: return [2, (_c.selection = _d.sent(),
+                    case 5: return [2, (_c.selection = _e.sent(),
                             _c)];
                 }
             });

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.User = exports.RegisteredClass = exports.Registration = exports.registrationQueries = void 0;
+exports.User = exports.School = exports.RegisteredClass = exports.Registration = exports.registrationQueries = void 0;
 exports.registrationQueries = {
     registrations: function (_, __, _a) {
         var db = _a.db, userInfo = _a.userInfo;
@@ -63,6 +63,15 @@ exports.Registration = {
             where: { regID: id },
         });
     },
+    communities: function (_a, _, _b) {
+        var id = _a.id;
+        var db = _b.db, userInfo = _b.userInfo;
+        if (!userInfo)
+            return null;
+        return db.tbl_reg_community.findMany({
+            where: { regID: id },
+        });
+    },
     groups: function (_a, _, _b) {
         var id = _a.id;
         var db = _b.db, userInfo = _b.userInfo;
@@ -86,7 +95,7 @@ exports.Registration = {
         var db = _b.db, userInfo = _b.userInfo;
         if (!userInfo)
             return null;
-        return db.tbl_reg_school.findMany({
+        return db.tbl_reg_school.findUnique({
             where: { regID: id },
         });
     },
@@ -108,6 +117,19 @@ exports.RegisteredClass = {
             return null;
         return db.tbl_reg_selection.findMany({
             where: { classpickID: id },
+        });
+    },
+};
+exports.School = {
+    schoolGroups: function (_a, _, _b) {
+        var id = _a.id;
+        var db = _b.db, userInfo = _b.userInfo;
+        if (!userInfo)
+            return null;
+        return db.tbl_reg_community.findMany({
+            where: {
+                regID: id,
+            },
         });
     },
 };

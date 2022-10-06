@@ -263,17 +263,16 @@ exports.TeacherMutations = {
                         })];
                     case 3:
                         idCheck = _e.sent();
-                        if (idCheck === null || idCheck === void 0 ? void 0 : idCheck.tbl_registration.tbl_user) {
-                            if (((_d = idCheck === null || idCheck === void 0 ? void 0 : idCheck.tbl_registration) === null || _d === void 0 ? void 0 : _d.tbl_user.id) != userInfo.userID) {
-                                return [2, {
-                                        userErrors: [
-                                            {
-                                                message: 'Not Authorized to delete teacher',
-                                            },
-                                        ],
-                                        teacher: null,
-                                    }];
-                            }
+                        if (!idCheck ||
+                            ((_d = idCheck.tbl_registration.tbl_user) === null || _d === void 0 ? void 0 : _d.id) != userInfo.userID) {
+                            return [2, {
+                                    userErrors: [
+                                        {
+                                            message: 'Not Authorized to delete teacher',
+                                        },
+                                    ],
+                                    teacher: null,
+                                }];
                         }
                         _e.label = 4;
                     case 4:

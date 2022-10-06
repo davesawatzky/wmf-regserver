@@ -72,7 +72,7 @@ exports.RegisteredClassMutations = {
                         if (!(!userInfo.admin && !userInfo.staff)) return [3, 2];
                         return [4, db.tbl_registration.findUnique({
                                 where: {
-                                    id: Number(registrationID),
+                                    id: +registrationID,
                                 },
                                 select: {
                                     id: true,
@@ -97,13 +97,13 @@ exports.RegisteredClassMutations = {
                         _e.label = 2;
                     case 2: return [4, db.tbl_reg_classes.findMany({
                             where: {
-                                regID: registeredClass.regID,
+                                regID: +registrationID,
                                 classNumber: registeredClass.classNumber,
                             },
                         })];
                     case 3:
                         classExists = _e.sent();
-                        if (classExists.length > 0) {
+                        if (classExists.length > 0 && registeredClass.classNumber) {
                             return [2, {
                                     userErrors: [
                                         {
@@ -132,8 +132,9 @@ exports.RegisteredClassMutations = {
         return __awaiter(void 0, void 0, void 0, function () {
             var classEntryExists, idCheck;
             var _c;
-            return __generator(this, function (_d) {
-                switch (_d.label) {
+            var _d;
+            return __generator(this, function (_e) {
+                switch (_e.label) {
                     case 0:
                         if (!userInfo) {
                             return [2, {
@@ -148,11 +149,11 @@ exports.RegisteredClassMutations = {
                         if (!(!userInfo.admin && !userInfo.staff)) return [3, 4];
                         return [4, db.tbl_reg_classes.findUnique({
                                 where: {
-                                    id: Number(registeredClassID),
+                                    id: +registeredClassID,
                                 },
                             })];
                     case 1:
-                        classEntryExists = _d.sent();
+                        classEntryExists = _e.sent();
                         if (!!classEntryExists) return [3, 2];
                         return [2, {
                                 userErrors: [
@@ -162,30 +163,25 @@ exports.RegisteredClassMutations = {
                                 ],
                                 registeredClass: null,
                             }];
-                    case 2: return [4, db.tbl_user.findMany({
+                    case 2: return [4, db.tbl_reg_classes.findMany({
+                            where: {
+                                id: +registeredClassID,
+                            },
                             select: {
                                 id: true,
                                 tbl_registration: {
                                     select: {
-                                        id: true,
-                                        tbl_reg_classes: {
-                                            select: {
-                                                id: true,
-                                            },
-                                            where: {
-                                                id: registeredClassID,
-                                            },
+                                        tbl_user: {
+                                            select: { id: true },
                                         },
                                     },
                                 },
                             },
                         })];
                     case 3:
-                        idCheck = _d.sent();
-                        console.log(registeredClassID);
+                        idCheck = _e.sent();
                         if (!idCheck ||
-                            idCheck.length > 1 ||
-                            idCheck[0].id != userInfo.userID) {
+                            ((_d = idCheck[0].tbl_registration.tbl_user) === null || _d === void 0 ? void 0 : _d.id) != userInfo.userID) {
                             return [2, {
                                     userErrors: [
                                         {
@@ -195,7 +191,7 @@ exports.RegisteredClassMutations = {
                                     registeredClass: null,
                                 }];
                         }
-                        _d.label = 4;
+                        _e.label = 4;
                     case 4:
                         _c = {
                             userErrors: []
@@ -203,23 +199,24 @@ exports.RegisteredClassMutations = {
                         return [4, db.tbl_reg_classes.update({
                                 data: __assign({}, registeredClass),
                                 where: {
-                                    id: Number(registeredClassID),
+                                    id: +registeredClassID,
                                 },
                             })];
-                    case 5: return [2, (_c.registeredClass = _d.sent(),
+                    case 5: return [2, (_c.registeredClass = _e.sent(),
                             _c)];
                 }
             });
         });
     },
     registeredClassDelete: function (_, _a, _b) {
-        var id = _a.id;
+        var registeredClassID = _a.registeredClassID;
         var db = _b.db, userInfo = _b.userInfo;
         return __awaiter(void 0, void 0, void 0, function () {
             var classEntryExists, idCheck;
             var _c;
-            return __generator(this, function (_d) {
-                switch (_d.label) {
+            var _d;
+            return __generator(this, function (_e) {
+                switch (_e.label) {
                     case 0:
                         if (!userInfo) {
                             return [2, {
@@ -234,11 +231,11 @@ exports.RegisteredClassMutations = {
                         if (!(!userInfo.admin && !userInfo.staff)) return [3, 4];
                         return [4, db.tbl_reg_classes.findUnique({
                                 where: {
-                                    id: Number(id),
+                                    id: +registeredClassID,
                                 },
                             })];
                     case 1:
-                        classEntryExists = _d.sent();
+                        classEntryExists = _e.sent();
                         if (!!classEntryExists) return [3, 2];
                         return [2, {
                                 userErrors: [
@@ -248,29 +245,25 @@ exports.RegisteredClassMutations = {
                                 ],
                                 registeredClass: null,
                             }];
-                    case 2: return [4, db.tbl_user.findMany({
+                    case 2: return [4, db.tbl_reg_classes.findMany({
+                            where: {
+                                id: +registeredClassID,
+                            },
                             select: {
                                 id: true,
                                 tbl_registration: {
                                     select: {
-                                        id: true,
-                                        tbl_reg_classes: {
-                                            select: {
-                                                id: true,
-                                            },
-                                            where: {
-                                                id: id,
-                                            },
+                                        tbl_user: {
+                                            select: { id: true },
                                         },
                                     },
                                 },
                             },
                         })];
                     case 3:
-                        idCheck = _d.sent();
+                        idCheck = _e.sent();
                         if (!idCheck ||
-                            idCheck.length > 1 ||
-                            idCheck[0].id != userInfo.userID) {
+                            ((_d = idCheck[0].tbl_registration.tbl_user) === null || _d === void 0 ? void 0 : _d.id) != userInfo.userID) {
                             return [2, {
                                     userErrors: [
                                         {
@@ -280,17 +273,17 @@ exports.RegisteredClassMutations = {
                                     registeredClass: null,
                                 }];
                         }
-                        _d.label = 4;
+                        _e.label = 4;
                     case 4:
                         _c = {
                             userErrors: []
                         };
                         return [4, db.tbl_reg_classes.delete({
                                 where: {
-                                    id: Number(id),
+                                    id: +registeredClassID,
                                 },
                             })];
-                    case 5: return [2, (_c.registeredClass = _d.sent(),
+                    case 5: return [2, (_c.registeredClass = _e.sent(),
                             _c)];
                 }
             });

@@ -3,7 +3,8 @@ import dotenv from 'dotenv'
 import { typeDefs as scalarTypeDefs } from 'graphql-scalars'
 import { ApolloServer, gql } from 'apollo-server-express'
 import { ApolloServerPluginDrainHttpServer } from 'apollo-server-core'
-import { PrismaClient, Prisma } from '@prisma/client'
+import { Prisma } from '@prisma/client'
+import { PrismaClient } from '@prisma/client'
 import express from 'express'
 import http from 'http'
 import cors from 'cors'
@@ -11,7 +12,7 @@ import { Query, Mutation, OtherQueries } from './graphql'
 import { getUserFromToken } from './utils/getUserFromToken'
 
 dotenv.config()
-const port = process.env.PORT || 4000
+const PORT = process.env.PORT || 4000
 
 const db = new PrismaClient()
 export interface Context {
@@ -46,7 +47,10 @@ async function startApolloServer() {
 		.disable('x-powered-by')
 
 	const httpServer = http.createServer(app)
-
+	const corsOptions = {
+		origin: ['https://wmf.diatonic.ca', 'https://studio.apollographql.com'],
+		credentials: true,
+	}
 	const apolloServer = new ApolloServer({
 		typeDefs,
 		resolvers,
@@ -57,13 +61,14 @@ async function startApolloServer() {
 				userInfo,
 			}
 		},
+		csrfPrevention: true,
 		cache: 'bounded',
 		plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
 	})
 	await apolloServer.start()
-	apolloServer.applyMiddleware({ app, path: '/graphql' })
-	await httpServer.listen(port, () => {
-		console.log(`Server is running on port ${port}.`)
+	apolloServer.applyMiddleware({ app, path: '/graphql', cors: corsOptions })
+	await httpServer.listen(PORT, () => {
+		console.log(`Server is running on port ${PORT}.`)
 	})
 	return { apolloServer, app }
 }

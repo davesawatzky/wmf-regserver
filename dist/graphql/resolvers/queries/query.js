@@ -25,6 +25,7 @@ exports.OtherQueries = {
     Trophy: festivalQuery_1.Trophy,
     Registration: regqueries_1.Registration,
     RegisteredClass: regqueries_1.RegisteredClass,
+    School: regqueries_1.School,
     User: regqueries_1.User,
 };
 //# sourceMappingURL=query.js.map

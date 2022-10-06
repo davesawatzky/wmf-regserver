@@ -138,6 +138,23 @@ exports.festivalQueries = {
             where: { name: { contains: name } },
         });
     },
+    disciplinesByType: function (_, _a, _b) {
+        var SGSlabel = _a.SGSlabel;
+        var db = _b.db;
+        return db.tbl_discipline.findMany({
+            where: {
+                tbl_subdiscipline: {
+                    some: {
+                        tbl_classlist: {
+                            some: {
+                                SGSlabel: SGSlabel,
+                            },
+                        },
+                    },
+                },
+            },
+        });
+    },
     levels: function (_, _a, _b) {
         var subdisciplineID = _a.subdisciplineID;
         var db = _b.db;
