@@ -67,7 +67,6 @@ var apollo_server_core_1 = require("apollo-server-core");
 var client_1 = require("@prisma/client");
 var express_1 = __importDefault(require("express"));
 var http_1 = __importDefault(require("http"));
-var cors_1 = __importDefault(require("cors"));
 var graphql_1 = require("./graphql");
 var getUserFromToken_1 = require("./utils/getUserFromToken");
 dotenv_1.default.config();
@@ -79,7 +78,7 @@ var typeDefs = __spreadArray(__spreadArray([], graphql_scalars_1.typeDefs, true)
 var resolvers = __assign({ Query: graphql_1.Query, Mutation: graphql_1.Mutation }, graphql_1.OtherQueries);
 function startApolloServer() {
     return __awaiter(this, void 0, void 0, function () {
-        var app, httpServer, corsOptions, apolloServer;
+        var app, httpServer, apolloServer;
         var _this = this;
         return __generator(this, function (_a) {
             switch (_a.label) {
@@ -87,14 +86,9 @@ function startApolloServer() {
                     app = (0, express_1.default)();
                     app
                         .use(express_1.default.json())
-                        .use((0, cors_1.default)())
                         .use(express_1.default.urlencoded({ extended: true }))
                         .disable('x-powered-by');
                     httpServer = http_1.default.createServer(app);
-                    corsOptions = {
-                        origin: ['https://wmf.diatonic.ca', 'https://studio.apollographql.com'],
-                        credentials: true,
-                    };
                     apolloServer = new apollo_server_express_1.ApolloServer({
                         typeDefs: typeDefs,
                         resolvers: resolvers,
@@ -122,7 +116,7 @@ function startApolloServer() {
                     return [4, apolloServer.start()];
                 case 1:
                     _a.sent();
-                    apolloServer.applyMiddleware({ app: app, path: '/graphql', cors: corsOptions });
+                    apolloServer.applyMiddleware({ app: app, path: '/graphql' });
                     return [4, httpServer.listen(PORT, function () {
                             console.log("Server is running on port ".concat(PORT, "."));
                         })];
