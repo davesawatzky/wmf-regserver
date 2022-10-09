@@ -88,7 +88,7 @@ export const CommunityMutations = {
 			}
 			/**
 			 * Check to see if there is already one community listed if
-			 * performerType is set to 'SCHOOL'
+			 * performerType is set to 'COMMUNITY'
 			 */
 			let communityExists = await db.tbl_reg_community.findMany({
 				where: {
@@ -96,7 +96,10 @@ export const CommunityMutations = {
 				},
 			})
 
-			if (communityExists && idCheck?.performerType === 'COMMUNITY') {
+			if (
+				communityExists.length > 1 &&
+				idCheck?.performerType === 'COMMUNITY'
+			) {
 				return {
 					userErrors: [
 						{

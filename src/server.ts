@@ -3,8 +3,7 @@ import dotenv from 'dotenv'
 import { typeDefs as scalarTypeDefs } from 'graphql-scalars'
 import { ApolloServer, gql } from 'apollo-server-express'
 import { ApolloServerPluginDrainHttpServer } from 'apollo-server-core'
-import { Prisma } from '@prisma/client'
-import { PrismaClient } from '@prisma/client'
+import { Prisma, PrismaClient } from '@prisma/client'
 import express from 'express'
 import http from 'http'
 import cors from 'cors'
@@ -48,7 +47,11 @@ async function startApolloServer() {
 
 	const httpServer = http.createServer(app)
 	const corsOptions = {
-		origin: ['https://wmf.diatonic.ca', 'https://studio.apollographql.com'],
+		origin: [
+			'https://wmf.diatonic.ca',
+			'https://studio.apollographql.com',
+			'*',
+		],
 		credentials: true,
 	}
 	const apolloServer = new ApolloServer({
