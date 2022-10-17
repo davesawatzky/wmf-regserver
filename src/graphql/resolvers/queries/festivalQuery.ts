@@ -135,9 +135,10 @@ export const festivalQueries = {
 						in: levelIDs,
 					},
 				},
+				orderBy: { order: 'asc' },
 			})
 		}
-		return db.tbl_level.findMany()
+		return db.tbl_level.findMany({ orderBy: { order: 'asc' } })
 	},
 
 	level: (_: any, { id }: tbl_level, { db }: Context) => {
@@ -148,6 +149,7 @@ export const festivalQueries = {
 	levelsByName: (_: any, { name }: tbl_level, { db }: Context) => {
 		return db.tbl_level.findMany({
 			where: { name: { contains: name } },
+			orderBy: { order: 'asc' },
 		})
 	},
 	sacredTitles: (_: any, __: any, { db }: Context) => {
@@ -295,6 +297,7 @@ export const Level = {
 					in: categoryIDs,
 				},
 			},
+			orderBy: { order: 'asc' },
 		})
 	},
 }
@@ -337,6 +340,7 @@ export const Subdiscipline = {
 					in: levelIDs,
 				},
 			},
+			orderBy: { order: 'asc' },
 		})
 	},
 }
