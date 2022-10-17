@@ -7,6 +7,8 @@ import { tbl_user } from '@prisma/client'
 
 interface SignupArgs {
 	credentials: {
+		firstName: string
+		lastName: string
 		email: tbl_user['email']
 		password: tbl_user['password']
 	}
@@ -32,14 +34,29 @@ export const AuthMutations = {
 		{ credentials }: SignupArgs,
 		{ db }: Context
 	): Promise<UserPayload> => {
-		const { email, password } = credentials
-		if (!email || !password) {
+		const { firstName, lastName, email, password } = credentials
+		if (!email || !password || !firstName || !lastName) {
 			return {
 				userErrors: [
 					{
-						message: 'You must provide a username and password',
+						message:
+							'You must provide first and last name, username and password',
 					},
 				],
+				token: null,
+			}
+		}
+		const isFirstName = validator.isAlpha(firstName, 'en-US' || 'fr-CA')
+		if (!isFirstName) {
+			return {
+				userErrors: [{ message: 'Invalid text in first name' }],
+				token: null,
+			}
+		}
+		const isLastName = validator.isAlpha(lastName, 'en-US' || 'fr-CA')
+		if (!isLastName) {
+			return {
+				userErrors: [{ message: 'Invalid text in last name' }],
 				token: null,
 			}
 		}
@@ -62,7 +79,14 @@ export const AuthMutations = {
 			}
 		}
 
-		const isValidPassword = validator.isLength(password, { min: 8 })
+		const isValidPassword = validator.isStrongPassword(password, {
+			minLength: 8,
+			minLowercase: 1,
+			minUppercase: 1,
+			minNumbers: 1,
+			minSymbols: 1,
+			returnScore: false,
+		})
 		if (!isValidPassword) {
 			return {
 				userErrors: [{ message: 'Invalid password' }],
@@ -72,6 +96,8 @@ export const AuthMutations = {
 		const hashedPassword = await bcrypt.hash(password, 15)
 		const user = await db.tbl_user.create({
 			data: {
+				firstName,
+				lastName,
 				email: email.toLowerCase(),
 				password: hashedPassword,
 				staff: false,
