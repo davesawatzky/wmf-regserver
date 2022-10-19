@@ -113,7 +113,8 @@ exports.CommunityMutations = {
                             })];
                     case 2:
                         communityExists = _d.sent();
-                        if (communityExists && (idCheck === null || idCheck === void 0 ? void 0 : idCheck.performerType) === 'COMMUNITY') {
+                        if (communityExists.length > 1 &&
+                            (idCheck === null || idCheck === void 0 ? void 0 : idCheck.performerType) === 'COMMUNITY') {
                             return [2, {
                                     userErrors: [
                                         {

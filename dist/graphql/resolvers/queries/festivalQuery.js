@@ -178,8 +178,9 @@ exports.festivalQueries = {
                                         in: levelIDs,
                                     },
                                 },
+                                orderBy: { order: 'asc' },
                             })];
-                    case 3: return [2, db.tbl_level.findMany()];
+                    case 3: return [2, db.tbl_level.findMany({ orderBy: { order: 'asc' } })];
                 }
             });
         });
@@ -196,6 +197,7 @@ exports.festivalQueries = {
         var db = _b.db;
         return db.tbl_level.findMany({
             where: { name: { contains: name } },
+            orderBy: { order: 'asc' },
         });
     },
     sacredTitles: function (_, __, _a) {
@@ -378,6 +380,7 @@ exports.Level = {
                                         in: categoryIDs,
                                     },
                                 },
+                                orderBy: { order: 'asc' },
                             })];
                 }
             });
@@ -431,6 +434,7 @@ exports.Subdiscipline = {
                                         in: levelIDs,
                                     },
                                 },
+                                orderBy: { order: 'asc' },
                             })];
                 }
             });

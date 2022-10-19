@@ -49,18 +49,32 @@ exports.AuthMutations = {
         var credentials = _a.credentials;
         var db = _b.db;
         return __awaiter(void 0, void 0, void 0, function () {
-            var email, password, isEmail, emailExists, isValidPassword, hashedPassword, user, token;
+            var firstName, lastName, email, password, isFirstName, isLastName, isEmail, emailExists, isValidPassword, hashedPassword, user, token;
             return __generator(this, function (_c) {
                 switch (_c.label) {
                     case 0:
-                        email = credentials.email, password = credentials.password;
-                        if (!email || !password) {
+                        firstName = credentials.firstName, lastName = credentials.lastName, email = credentials.email, password = credentials.password;
+                        if (!email || !password || !firstName || !lastName) {
                             return [2, {
                                     userErrors: [
                                         {
-                                            message: 'You must provide a username and password',
+                                            message: 'You must provide first and last name, username and password',
                                         },
                                     ],
+                                    token: null,
+                                }];
+                        }
+                        isFirstName = validator_1.default.isAlpha(firstName, 'en-US' || 'fr-CA');
+                        if (!isFirstName) {
+                            return [2, {
+                                    userErrors: [{ message: 'Invalid text in first name' }],
+                                    token: null,
+                                }];
+                        }
+                        isLastName = validator_1.default.isAlpha(lastName, 'en-US' || 'fr-CA');
+                        if (!isLastName) {
+                            return [2, {
+                                    userErrors: [{ message: 'Invalid text in last name' }],
                                     token: null,
                                 }];
                         }
@@ -84,7 +98,14 @@ exports.AuthMutations = {
                                     token: null,
                                 }];
                         }
-                        isValidPassword = validator_1.default.isLength(password, { min: 8 });
+                        isValidPassword = validator_1.default.isStrongPassword(password, {
+                            minLength: 8,
+                            minLowercase: 1,
+                            minUppercase: 1,
+                            minNumbers: 1,
+                            minSymbols: 1,
+                            returnScore: false,
+                        });
                         if (!isValidPassword) {
                             return [2, {
                                     userErrors: [{ message: 'Invalid password' }],
@@ -96,6 +117,8 @@ exports.AuthMutations = {
                         hashedPassword = _c.sent();
                         return [4, db.tbl_user.create({
                                 data: {
+                                    firstName: firstName,
+                                    lastName: lastName,
                                     email: email.toLowerCase(),
                                     password: hashedPassword,
                                     staff: false,
