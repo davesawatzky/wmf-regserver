@@ -4,9 +4,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getUserFromToken = void 0;
-var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-var keys_1 = __importDefault(require("../utils/keys"));
-var getUserFromToken = function (token) {
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const keys_1 = __importDefault(require("../utils/keys"));
+const getUserFromToken = (token) => {
     try {
         return jsonwebtoken_1.default.verify(token, keys_1.default);
     }

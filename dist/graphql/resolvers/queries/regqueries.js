@@ -2,8 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = exports.School = exports.RegisteredClass = exports.Registration = exports.registrationQueries = void 0;
 exports.registrationQueries = {
-    registrations: function (_, __, _a) {
-        var db = _a.db, userInfo = _a.userInfo;
+    registrations: (_, __, { db, userInfo }) => {
         if (!userInfo)
             return null;
         if (userInfo.admin || userInfo.staff) {
@@ -24,15 +23,13 @@ exports.registrationQueries = {
             });
         }
     },
-    registration: function (_, _a, _b) {
-        var id = _a.id;
-        var db = _b.db, userInfo = _b.userInfo;
+    registration: (_, { id }, { db, userInfo }) => {
         if (!userInfo)
             return null;
         if (userInfo.admin || userInfo.staff) {
             return db.tbl_registration.findUnique({
                 where: {
-                    id: id,
+                    id,
                 },
             });
         }
@@ -42,8 +39,7 @@ exports.registrationQueries = {
             });
         }
     },
-    performers: function (_, __, _a) {
-        var db = _a.db, userInfo = _a.userInfo;
+    performers: (_, __, { db, userInfo }) => {
         if (!userInfo)
             return null;
         if (userInfo.admin || userInfo.staff) {
@@ -54,54 +50,42 @@ exports.registrationQueries = {
     },
 };
 exports.Registration = {
-    performers: function (_a, _, _b) {
-        var id = _a.id;
-        var db = _b.db, userInfo = _b.userInfo;
+    performers: ({ id }, _, { db, userInfo }) => {
         if (!userInfo)
             return null;
         return db.tbl_reg_performer.findMany({
             where: { regID: id },
         });
     },
-    communities: function (_a, _, _b) {
-        var id = _a.id;
-        var db = _b.db, userInfo = _b.userInfo;
+    communities: ({ id }, _, { db, userInfo }) => {
         if (!userInfo)
             return null;
         return db.tbl_reg_community.findMany({
             where: { regID: id },
         });
     },
-    groups: function (_a, _, _b) {
-        var id = _a.id;
-        var db = _b.db, userInfo = _b.userInfo;
+    groups: ({ id }, _, { db, userInfo }) => {
         if (!userInfo)
             return null;
         return db.tbl_reg_group.findMany({
             where: { regID: id },
         });
     },
-    registeredClasses: function (_a, _, _b) {
-        var id = _a.id;
-        var db = _b.db, userInfo = _b.userInfo;
+    registeredClasses: ({ id }, _, { db, userInfo }) => {
         if (!userInfo)
             return null;
         return db.tbl_reg_classes.findMany({
             where: { regID: id },
         });
     },
-    school: function (_a, _, _b) {
-        var id = _a.id;
-        var db = _b.db, userInfo = _b.userInfo;
+    school: ({ id }, _, { db, userInfo }) => {
         if (!userInfo)
             return null;
         return db.tbl_reg_school.findUnique({
             where: { regID: id },
         });
     },
-    teacher: function (_a, _, _b) {
-        var id = _a.id;
-        var db = _b.db, userInfo = _b.userInfo;
+    teacher: ({ id }, _, { db, userInfo }) => {
         if (!userInfo)
             return null;
         return db.tbl_reg_teacher.findUnique({
@@ -110,9 +94,7 @@ exports.Registration = {
     },
 };
 exports.RegisteredClass = {
-    selections: function (_a, _, _b) {
-        var id = _a.id;
-        var db = _b.db, userInfo = _b.userInfo;
+    selections: ({ id }, _, { db, userInfo }) => {
         if (!userInfo)
             return null;
         return db.tbl_reg_selection.findMany({
@@ -121,9 +103,7 @@ exports.RegisteredClass = {
     },
 };
 exports.School = {
-    schoolGroups: function (_a, _, _b) {
-        var id = _a.id;
-        var db = _b.db, userInfo = _b.userInfo;
+    schoolGroups: ({ id }, _, { db, userInfo }) => {
         if (!userInfo)
             return null;
         return db.tbl_reg_community.findMany({
@@ -134,9 +114,7 @@ exports.School = {
     },
 };
 exports.User = {
-    registrations: function (_a, _, _b) {
-        var id = _a.id;
-        var db = _b.db, userInfo = _b.userInfo;
+    registrations: ({ id }, _, { db, userInfo }) => {
         if (!userInfo)
             return null;
         if (userInfo.staff || userInfo.admin) {
