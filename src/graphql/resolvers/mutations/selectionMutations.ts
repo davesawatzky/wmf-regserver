@@ -19,7 +19,7 @@ export const SelectionMutations = {
 			registeredClassID,
 			selection,
 		}: {
-			registeredClassID: number
+			registeredClassID: string
 			selection: tbl_reg_selection
 		},
 		{ db, userInfo }: Context
