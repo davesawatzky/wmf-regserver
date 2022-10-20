@@ -334,7 +334,7 @@ input SchoolInput {
 
 type Selection {
 	id: ID!
-	title: String!
+	title: String
 	largerWork: String
 	movement: String
 	composer: String
@@ -342,7 +342,7 @@ type Selection {
 }
 
 input SelectionInput {
-	title: String!
+	title: String
 	largerWork: String
 	movement: String
 	composer: String

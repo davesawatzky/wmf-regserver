@@ -140,11 +140,11 @@ model tbl_reg_school {
 model tbl_reg_selection {
   id              Int             @id @default(autoincrement())
   classpickID     Int
-  title           String          @db.VarChar(100)
+  title           String?          @db.VarChar(100)
   largerWork      String?         @db.VarChar(100)
   movement        String?         @db.VarChar(30)
-  composer        String          @db.VarChar(30)
-  duration        String          @default("") @db.VarChar(10)
+  composer        String?          @db.VarChar(30)
+  duration        String?         @default("0:00") @db.VarChar(10)
   createdAt       DateTime        @default(now()) @db.DateTime(0)
   updatedAt       DateTime        @default(now()) @updatedAt @db.DateTime(0)
   tbl_reg_classes tbl_reg_classes @relation(fields: [classpickID], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "selection_class")
