@@ -47,7 +47,7 @@ export const SelectionMutations = {
 									id: true,
 								},
 								where: {
-									id: +registeredClassID,
+									id: parseInt(registeredClassID),
 								},
 							},
 						},
@@ -67,7 +67,7 @@ export const SelectionMutations = {
 			}
 		}
 
-		selection.classpickID = +registeredClassID
+		selection.classpickID = parseInt(registeredClassID)
 
 		return {
 			userErrors: [],
@@ -102,7 +102,7 @@ export const SelectionMutations = {
 			let selectionExists: tbl_reg_selection | null =
 				await db.tbl_reg_selection.findUnique({
 					where: {
-						id: Number(selectionID),
+						id: selectionID,
 					},
 				})
 			if (!selectionExists) {
@@ -117,7 +117,7 @@ export const SelectionMutations = {
 			} else {
 				let idCheck = await db.tbl_reg_selection.findMany({
 					where: {
-						id: +selectionID,
+						id: selectionID,
 					},
 					select: {
 						id: true,
@@ -159,7 +159,7 @@ export const SelectionMutations = {
 					...selection,
 				},
 				where: {
-					id: Number(selectionID),
+					id: selectionID,
 				},
 			}),
 		}
@@ -185,7 +185,7 @@ export const SelectionMutations = {
 			let selectionExists: tbl_reg_selection | null =
 				await db.tbl_reg_selection.findUnique({
 					where: {
-						id: +selectionID,
+						id: selectionID,
 					},
 				})
 			if (!selectionExists) {
@@ -200,7 +200,7 @@ export const SelectionMutations = {
 			} else {
 				let idCheck = await db.tbl_reg_selection.findMany({
 					where: {
-						id: +selectionID,
+						id: selectionID,
 					},
 					select: {
 						id: true,
@@ -238,7 +238,7 @@ export const SelectionMutations = {
 			userErrors: [],
 			selection: await db.tbl_reg_selection.delete({
 				where: {
-					id: Number(selectionID),
+					id: selectionID,
 				},
 			}),
 		}
