@@ -82,8 +82,8 @@ model tbl_reg_classes {
 model tbl_reg_group {
   id                  Int                   @id @default(autoincrement())
   regID               Int
-  name                String                @db.VarChar(50)
-  groupType           String                @db.VarChar(15)
+  name                String?               @db.VarChar(50)
+  groupType           String?               @db.VarChar(15)
   numberOfPerformers  Int?                  @db.TinyInt
   age                 Int?                  @db.TinyInt
   instruments         String?               @db.VarChar(200)
@@ -122,7 +122,7 @@ model tbl_reg_performer {
 model tbl_reg_school {
   id               Int              @id @default(autoincrement())
   regID            Int              @unique(map: "school_constraint")
-  name             String           @default("") @db.VarChar(50)
+  name             String?          @default("") @db.VarChar(50)
   division         String?          @db.VarChar(50)
   streetNumber     String?          @db.VarChar(6)
   streetName       String?          @db.VarChar(100)
@@ -140,11 +140,11 @@ model tbl_reg_school {
 model tbl_reg_selection {
   id              Int             @id @default(autoincrement())
   classpickID     Int
-  title           String?          @db.VarChar(100)
+  title           String?         @db.VarChar(100)
   largerWork      String?         @db.VarChar(100)
   movement        String?         @db.VarChar(30)
-  composer        String?          @db.VarChar(30)
-  duration        String?         @default("0:00") @db.VarChar(10)
+  composer        String?         @db.VarChar(30)
+  duration        String          @default("0:00") @db.VarChar(10)
   createdAt       DateTime        @default(now()) @db.DateTime(0)
   updatedAt       DateTime        @default(now()) @updatedAt @db.DateTime(0)
   tbl_reg_classes tbl_reg_classes @relation(fields: [classpickID], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "selection_class")
@@ -260,7 +260,7 @@ model tbl_user {
 model tbl_reg_community {
   id                 Int              @id @default(autoincrement())
   regID              Int
-  name               String           @db.VarChar(50)
+  name               String?          @db.VarChar(50)
   groupSize          Int?
   chaperones         Int?
   wheelchairs        Int?
