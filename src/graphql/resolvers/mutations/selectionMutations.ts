@@ -107,7 +107,7 @@ export const SelectionMutations = {
 			let selectionExists: tbl_reg_selection | null =
 				await db.tbl_reg_selection.findUnique({
 					where: {
-						id: selectionID,
+						id: +selectionID,
 					},
 				})
 			if (!selectionExists) {
@@ -122,7 +122,7 @@ export const SelectionMutations = {
 			} else {
 				let idCheck = await db.tbl_reg_selection.findMany({
 					where: {
-						id: selectionID,
+						id: +selectionID,
 					},
 					select: {
 						id: true,
@@ -164,7 +164,7 @@ export const SelectionMutations = {
 					...selection,
 				},
 				where: {
-					id: selectionID,
+					id: +selectionID,
 				},
 			}),
 		}
@@ -190,7 +190,7 @@ export const SelectionMutations = {
 			let selectionExists: tbl_reg_selection | null =
 				await db.tbl_reg_selection.findUnique({
 					where: {
-						id: selectionID,
+						id: +selectionID,
 					},
 				})
 			if (!selectionExists) {
@@ -205,7 +205,7 @@ export const SelectionMutations = {
 			} else {
 				let idCheck = await db.tbl_reg_selection.findMany({
 					where: {
-						id: selectionID,
+						id: +selectionID,
 					},
 					select: {
 						id: true,
@@ -243,7 +243,7 @@ export const SelectionMutations = {
 			userErrors: [],
 			selection: await db.tbl_reg_selection.delete({
 				where: {
-					id: selectionID,
+					id: +selectionID,
 				},
 			}),
 		}
