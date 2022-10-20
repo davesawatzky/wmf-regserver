@@ -1,1 +1,0 @@
-{"version":3,"file":"getUserFromToken.js","sourceRoot":"","sources":["../../src/utils/getUserFromToken.ts"],"names":[],"mappings":";;;;;;AAAA,gEAA8B;AAC9B,yDAAyC;AAElC,MAAM,gBAAgB,GAAG,CAAC,KAAa,EAAE,EAAE;IACjD,IAAI;QACH,OAAO,sBAAG,CAAC,MAAM,CAAC,KAAK,EAAE,cAAa,CAIrC,CAAA;KACD;IAAC,OAAO,KAAK,EAAE;QACf,OAAO,IAAI,CAAA;KACX;AACF,CAAC,CAAA;AAVY,QAAA,gBAAgB,oBAU5B"}

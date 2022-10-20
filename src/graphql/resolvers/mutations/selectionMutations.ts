@@ -73,7 +73,12 @@ export const SelectionMutations = {
 			userErrors: [],
 			selection: await db.tbl_reg_selection.create({
 				data: {
-					...selection,
+					classpickID: selection.classpickID,
+					title: selection.title,
+					composer: selection.composer,
+					largerWork: selection.largerWork,
+					movement: selection.movement,
+					duration: selection.duration,
 				},
 			}),
 		}
