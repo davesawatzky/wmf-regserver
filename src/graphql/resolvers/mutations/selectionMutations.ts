@@ -36,26 +36,22 @@ export const SelectionMutations = {
 		}
 
 		if (!userInfo.admin && !userInfo.staff) {
-			let idCheck = await db.tbl_user.findMany({
+			let idCheck = await db.tbl_reg_classes.findUnique({
+				where: {
+					id: +registeredClassID,
+				},
 				select: {
-					id: true,
 					tbl_registration: {
 						select: {
-							id: true,
-							tbl_reg_classes: {
-								select: {
-									id: true,
-								},
-								where: {
-									id: parseInt(registeredClassID),
-								},
+							tbl_user: {
+								select: { id: true },
 							},
 						},
 					},
 				},
 			})
 
-			if (idCheck[0].id != userInfo.userID) {
+			if (idCheck?.tbl_registration.tbl_user?.id != userInfo.userID) {
 				return {
 					userErrors: [
 						{
@@ -120,12 +116,11 @@ export const SelectionMutations = {
 					selection: null,
 				}
 			} else {
-				let idCheck = await db.tbl_reg_selection.findMany({
+				let idCheck = await db.tbl_reg_selection.findUnique({
 					where: {
 						id: +selectionID,
 					},
 					select: {
-						id: true,
 						tbl_reg_classes: {
 							select: {
 								tbl_registration: {
@@ -141,9 +136,8 @@ export const SelectionMutations = {
 				})
 
 				if (
-					!idCheck ||
-					idCheck[0].tbl_reg_classes.tbl_registration.tbl_user?.id !=
-						userInfo.userID
+					idCheck?.tbl_reg_classes.tbl_registration.tbl_user?.id !=
+					userInfo.userID
 				) {
 					return {
 						userErrors: [
@@ -203,12 +197,11 @@ export const SelectionMutations = {
 					selection: null,
 				}
 			} else {
-				let idCheck = await db.tbl_reg_selection.findMany({
+				let idCheck = await db.tbl_reg_selection.findUnique({
 					where: {
 						id: +selectionID,
 					},
 					select: {
-						id: true,
 						tbl_reg_classes: {
 							select: {
 								tbl_registration: {
@@ -225,7 +218,7 @@ export const SelectionMutations = {
 
 				if (
 					!idCheck ||
-					idCheck[0].tbl_reg_classes.tbl_registration.tbl_user?.id !=
+					idCheck.tbl_reg_classes.tbl_registration.tbl_user?.id !=
 						userInfo.userID
 				) {
 					return {
