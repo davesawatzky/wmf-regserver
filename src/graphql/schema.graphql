@@ -25,6 +25,8 @@ type Query {
 	discipline(id: ID!): Discipline!
 	disciplinesByName(name: String!): [Discipline!]!
 	disciplinesByType(SGSlabel: SGSlabel!): [Discipline!]!
+	instruments: [Instrument!]!
+	instrument(id: ID!): Instrument!
 	levels(subdisciplineID: ID): [Level!]!
 	level(id: ID!): Level!
 	levelsByName(name: String!): [Level!]
@@ -203,6 +205,11 @@ input GroupInput {
 	numberOfPerformers: Int
 	age: Int
 	instruments: String
+}
+
+type Instrument {
+	id: ID!
+	name: String!
 }
 
 type Level {

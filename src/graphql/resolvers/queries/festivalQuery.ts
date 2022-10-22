@@ -2,6 +2,7 @@ import {
 	tbl_category,
 	tbl_classlist,
 	tbl_discipline,
+	tbl_instruments,
 	tbl_level,
 	tbl_sacred,
 	tbl_SGS,
@@ -117,6 +118,14 @@ export const festivalQueries = {
 					},
 				},
 			},
+		})
+	},
+	instruments: (_: any, __: any, { db }: Context) => {
+		return db.tbl_instruments.findMany()
+	},
+	instrument: (_: any, { id }: tbl_instruments, { db }: Context) => {
+		return db.tbl_instruments.findUnique({
+			where: { id },
 		})
 	},
 	levels: async (

@@ -56,7 +56,7 @@ model tbl_level {
   id            Int             @id @default(autoincrement())
   name          String          @db.VarChar(50)
   description   String?         @db.Text
-  order         Int
+  order         Int?
   tbl_classlist tbl_classlist[]
 }
 
@@ -273,6 +273,11 @@ model tbl_reg_community {
   tbl_registration   tbl_registration @relation(fields: [regID], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "tbl_reg_community_ibfk_1")
 
   @@index([regID], map: "community_registration")
+}
+
+model tbl_instruments {
+  id   Int    @id @default(autoincrement())
+  name String @default("0") @db.VarChar(50)
 }
 
 enum tbl_SGS {
