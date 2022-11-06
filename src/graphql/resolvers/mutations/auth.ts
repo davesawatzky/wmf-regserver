@@ -53,7 +53,10 @@ export const AuthMutations = {
 				token: null,
 			}
 		}
-		const isLastName = validator.isAlpha(lastName, 'en-US' || 'fr-CA')
+		const isLastName = validator.isAlpha(lastName, 'en-US' || 'fr-CA', {
+			ignore: ' -',
+		})
+
 		if (!isLastName) {
 			return {
 				userErrors: [{ message: 'Invalid text in last name' }],
@@ -94,6 +97,8 @@ export const AuthMutations = {
 			}
 		}
 		const hashedPassword = await bcrypt.hash(password, 15)
+		console.log(firstName, lastName, email.toLowerCase(), hashedPassword)
+
 		const user = await db.tbl_user.create({
 			data: {
 				firstName,
