@@ -46,7 +46,9 @@ export const AuthMutations = {
 				token: null,
 			}
 		}
-		const isFirstName = validator.isAlpha(firstName, 'en-US' || 'fr-CA')
+		const isFirstName = validator.isAlpha(firstName, 'en-US' || 'fr-CA', {
+			ignore: ' -',
+		})
 		if (!isFirstName) {
 			return {
 				userErrors: [{ message: 'Invalid text in first name' }],
