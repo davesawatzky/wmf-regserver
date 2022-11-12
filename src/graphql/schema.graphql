@@ -111,11 +111,9 @@ type Mutation {
 		selection: SelectionInput!
 	): SelectionPayload!
 	selectionDelete(selectionID: ID!): SelectionPayload!
-
 	teacherCreate(registrationID: ID!, teacher: TeacherInput!): TeacherPayload!
 	teacherUpdate(teacherID: ID!, teacher: TeacherInput!): TeacherPayload!
 	teacherDelete(teacherID: ID!): TeacherPayload!
-
 	userUpdate(userID: ID!, user: UserInput!): UserPayload!
 	userDelete(userID: ID!): UserPayload!
 }
