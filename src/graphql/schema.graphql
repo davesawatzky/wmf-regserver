@@ -144,6 +144,7 @@ type Classlist {
 	minSelection: Int!
 	requiredSelection: String
 	SGSlabel: SGSlabel!
+	price: Float!
 	trophies: [Trophy]
 }
 type ClassTrophy {
