@@ -46,25 +46,34 @@ export const AuthMutations = {
 				token: null,
 			}
 		}
-		const isFirstName = validator.isAlpha(firstName, 'en-US' || 'fr-CA', {
-			ignore: ' -',
-		})
+		const isFirstName = validator.isAlpha(
+			firstName,
+			'en-US' && 'fr-FR' && 'es-ES' && 'de-DE' && 'it-IT' && 'pt-PT',
+			{
+				ignore: " -'",
+			}
+		)
 		if (!isFirstName) {
 			return {
 				userErrors: [{ message: 'Invalid text in first name' }],
 				token: null,
 			}
 		}
-		const isLastName = validator.isAlpha(lastName, 'en-US' || 'fr-CA', {
-			ignore: ' -',
-		})
 
+		const isLastName = validator.isAlpha(
+			lastName,
+			'en-US' && 'fr-FR' && 'es-ES' && 'de-DE' && 'it-IT' && 'pt-PT',
+			{
+				ignore: " -'",
+			}
+		)
 		if (!isLastName) {
 			return {
 				userErrors: [{ message: 'Invalid text in last name' }],
 				token: null,
 			}
 		}
+
 		const isEmail = validator.isEmail(email)
 		if (!isEmail) {
 			return {
