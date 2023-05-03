@@ -195,7 +195,7 @@ model tbl_registration {
   totalAmt          Decimal?                       @db.Decimal(10, 0)
   payedAmt          Decimal?                       @db.Decimal(10, 0)
   transactionInfo   String?                        @db.VarChar(200)
-  confirmation      String?                        @db.VarChar(20)
+  submission        String?                        @db.VarChar(20)
   createdAt         DateTime                       @default(now()) @db.DateTime(0)
   updatedAt         DateTime                       @default(now()) @updatedAt @db.DateTime(0)
   tbl_user          tbl_user?                      @relation(fields: [userID], references: [id], onUpdate: Restrict, map: "FK_tbl_registration_tbl_user")

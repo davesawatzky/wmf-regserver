@@ -268,7 +268,7 @@ type Registration {
 	totalAmt: Float
 	payedAmt: Float
 	transactionInfo: String
-	confirmation: String
+	submission: String
 	createdAt: DateTime
 }
 
@@ -280,7 +280,7 @@ input RegistrationInput {
 	totalAmt: Float
 	payedAmt: Float
 	transactionInfo: String
-	confirmation: String
+	submission: String
 }
 
 type RegisteredClass {
